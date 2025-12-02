@@ -34,6 +34,7 @@ const translations = {
         "project.quant.desc": "Algorithmic trading execution engine capable of handling complex order strategies. (Currently in development)",
         "project.portfolio.title": "Hardi Infusion Lab Portfolio",
         "project.portfolio.desc": "The platform you are currently viewing. Built with Next.js 14, Server Components, and Tailwind CSS to demonstrate modern full-stack capabilities.",
+        "project.coming_soon": "Coming Soon",
         "footer.rights": "All rights reserved.",
     },
     zh: {
@@ -59,6 +60,7 @@ const translations = {
         "project.quant.desc": "能够处理复杂订单策略的算法交易执行引擎。（目前正在开发中）",
         "project.portfolio.title": "Hardi Infusion Lab 官网",
         "project.portfolio.desc": "您当前访问的平台。使用 Next.js 14、Server Components 和 Tailwind CSS 构建，展示现代全栈开发能力。",
+        "project.coming_soon": "暂未开放",
         "footer.rights": "保留所有权利。",
     },
 };

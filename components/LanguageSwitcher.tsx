@@ -18,7 +18,7 @@ export default function LanguageSwitcher() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-300 transition-colors hover:text-white bg-white/5 rounded-full backdrop-blur-sm border border-white/10"
+        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-300 transition-colors hover:text-white bg-white/5 rounded-full backdrop-blur-sm border border-white/10 cursor-pointer cursor-pointer"
       >
         <Globe size={16} />
         <span className="uppercase">{language}</span>

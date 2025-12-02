@@ -5,8 +5,37 @@ import "./globals.css";
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://hardi-infusion-lab.vercel.app"), // TODO: Update with your actual Vercel domain
   title: "Hardi Infusion Lab | Full Stack Digital Solutions",
   description: "Premium full-stack development studio specializing in high-performance web applications, trading platforms, and cloud architecture.",
+  icons: {
+    icon: "/logo-symbol.png",
+    shortcut: "/logo-symbol.png",
+    apple: "/logo-symbol.png",
+  },
+  openGraph: {
+    title: "Hardi Infusion Lab | Full Stack Digital Solutions",
+    description: "Premium full-stack development studio specializing in high-performance web applications, trading platforms, and cloud architecture.",
+    url: "https://hardi.lab", // Placeholder, user can update
+    siteName: "Hardi Infusion Lab",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Hardi Infusion Lab Preview",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hardi Infusion Lab",
+    description: "Premium full-stack development studio.",
+    images: ["/og-image.png"],
+    creator: "@hardihsu",
+  },
 };
 
 export default function RootLayout({

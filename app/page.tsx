@@ -7,10 +7,12 @@ import {
   Terminal,
   ArrowRight
 } from "lucide-react";
+import Image from "next/image";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ProjectCard from "@/components/ProjectCard";
 import SkillBadge from "@/components/SkillBadge";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
+import Logo from "@/components/Logo";
 
 function HomeContent() {
   const { t } = useLanguage();
@@ -30,10 +32,9 @@ function HomeContent() {
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-black/50 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
-              <span className="font-bold text-white">H</span>
-            </div>
+            <Logo className="w-10 h-10" />
             <span className="font-bold text-lg tracking-tight">Hardi Infusion Lab</span>
           </div>
           <div className="flex items-center gap-6">
@@ -174,6 +175,7 @@ function HomeContent() {
               description={t("project.quant.desc")}
               tags={["Python", "Rust", "AWS", "Low Latency"]}
               featured={false}
+              link="#"
             />
 
             <ProjectCard

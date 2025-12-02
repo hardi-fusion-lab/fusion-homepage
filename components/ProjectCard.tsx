@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUpRight, Github } from "lucide-react";
-import Image from "next/image";
+import { ArrowUpRight, Github, Lock } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ProjectCardProps {
     title: string;
@@ -10,7 +10,6 @@ interface ProjectCardProps {
     tags: string[];
     link?: string;
     github?: string;
-    image?: string; // Placeholder for now
     featured?: boolean;
 }
 
@@ -22,13 +21,18 @@ export default function ProjectCard({
     github,
     featured = false,
 }: ProjectCardProps) {
+    const { t } = useLanguage();
+    const isComingSoon = !link || link === "#";
+
     return (
         <motion.div
-            whileHover={{ y: -5 }}
-            className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all hover:border-blue-500/30 hover:bg-white/10 ${featured ? "md:col-span-2" : ""
-                }`}
+            whileHover={isComingSoon ? {} : { y: -5 }}
+            className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all ${isComingSoon ? "opacity-80" : "hover:border-blue-500/30 hover:bg-white/10"
+                } ${featured ? "md:col-span-2" : ""}`}
         >
-            <div className="absolute inset-0 -z-10 bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+            {!isComingSoon && (
+                <div className="absolute inset-0 -z-10 bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+            )}
 
             <div className="flex flex-col h-full justify-between gap-6">
                 <div>
@@ -47,7 +51,12 @@ export default function ProjectCard({
                                     <Github size={20} />
                                 </a>
                             )}
-                            {link && (
+                            {isComingSoon ? (
+                                <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-gray-400 cursor-not-allowed">
+                                    <Lock size={12} />
+                                    <span>{t("project.coming_soon")}</span>
+                                </div>
+                            ) : (
                                 <a
                                     href={link}
                                     target="_blank"
