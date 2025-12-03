@@ -35,7 +35,7 @@ function HomeContent() {
 
           <div className="flex items-center gap-2">
             <Logo className="w-10 h-10" />
-            <span className="font-bold text-lg tracking-tight">Hardi Infusion Lab</span>
+            <span className="font-bold text-lg tracking-tight">Hardi Fusion Lab</span>
           </div>
           <div className="flex items-center gap-6">
             <a href="#projects" className="text-sm text-gray-400 hover:text-white transition-colors hidden sm:block">{t("nav.projects")}</a>
@@ -193,7 +193,7 @@ function HomeContent() {
       <footer className="py-12 px-6 border-t border-white/5 mt-auto">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} Hardi Infusion Lab. {t("footer.rights")}
+            © {new Date().getFullYear()} Hardi Fusion Lab. {t("footer.rights")}
           </div>
           <div className="flex gap-6">
             <a href="https://github.com/hardihsu" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">GitHub</a>

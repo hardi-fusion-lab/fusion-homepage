@@ -5,8 +5,8 @@ import "./globals.css";
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://hardi-infusion-lab.vercel.app"), // TODO: Update with your actual Vercel domain
-  title: "Hardi Infusion Lab | Full Stack Digital Solutions",
+  metadataBase: new URL("https://hardi-fusion-lab.vercel.app"), // TODO: Update with your actual Vercel domain
+  title: "Hardi Fusion Lab | Full Stack Digital Solutions",
   description: "Premium full-stack development studio specializing in high-performance web applications, trading platforms, and cloud architecture.",
   icons: {
     icon: "/logo-symbol.png",
@@ -14,16 +14,16 @@ export const metadata: Metadata = {
     apple: "/logo-symbol.png",
   },
   openGraph: {
-    title: "Hardi Infusion Lab | Full Stack Digital Solutions",
+    title: "Hardi Fusion Lab | Full Stack Digital Solutions",
     description: "Premium full-stack development studio specializing in high-performance web applications, trading platforms, and cloud architecture.",
     url: "https://hardi.lab", // Placeholder, user can update
-    siteName: "Hardi Infusion Lab",
+    siteName: "Hardi Fusion Lab",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Hardi Infusion Lab Preview",
+        alt: "Hardi Fusion Lab Preview",
       },
     ],
     locale: "en_US",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hardi Infusion Lab",
+    title: "Hardi Fusion Lab",
     description: "Premium full-stack development studio.",
     images: ["/og-image.png"],
     creator: "@hardihsu",
