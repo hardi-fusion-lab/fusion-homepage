@@ -8,13 +8,14 @@ import {
   Terminal,
   ArrowRight
 } from "lucide-react";
-import Image from "next/image";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ProjectCard from "@/components/ProjectCard";
 import SkillBadge from "@/components/SkillBadge";
 import ProjectDetailsModal, { ProjectDetails } from "@/components/ProjectDetailsModal";
 import { LanguageProvider, useLanguage, ProjectData } from "@/context/LanguageContext";
 import Logo from "@/components/Logo";
+import AboutSection from "@/components/AboutSection";
+import InsightsSection from "@/components/InsightsSection";
 
 function HomeContent() {
   const { t, getProjectData } = useLanguage();
@@ -23,6 +24,7 @@ function HomeContent() {
 
   const handleProjectClick = (projectId: string) => {
     const data = getProjectData(projectId);
+    // Cast to compatible type since ProjectData has same shape but we want to be safe or update interfaces later
     if (data) {
       setSelectedProject(data);
       setIsModalOpen(true);
@@ -52,6 +54,7 @@ function HomeContent() {
           <div className="flex items-center gap-6">
             <a href="#projects" className="text-sm text-gray-400 hover:text-white transition-colors hidden sm:block">{t("nav.projects")}</a>
             <a href="#skills" className="text-sm text-gray-400 hover:text-white transition-colors hidden sm:block">{t("nav.expertise")}</a>
+            <a href="#insights" className="text-sm text-gray-400 hover:text-white transition-colors hidden sm:block">{t("nav.insights")}</a>
             <LanguageSwitcher />
           </div>
         </div>
@@ -99,6 +102,9 @@ function HomeContent() {
           </motion.div>
         </div>
       </section>
+
+      {/* About Section */}
+      <AboutSection />
 
       {/* Skills Section */}
       <section id="skills" className="py-20 px-6 border-t border-white/5 bg-white/[0.02]">
@@ -177,7 +183,7 @@ function HomeContent() {
             <ProjectCard
               title={t("project.futures.title")}
               description={t("project.futures.desc")}
-              tags={["React", "NestJS", "WebSocket", "PostgreSQL", "High Performance"]}
+              tags={["Python", "React", "NestJS", "WebSocket", "PostgreSQL", "High Performance"]}
               featured={true}
               onClick={() => handleProjectClick("futures_platform")}
             />
@@ -196,11 +202,14 @@ function HomeContent() {
               tags={["Next.js", "React", "Tailwind", "Framer Motion"]}
               featured={false}
               github="https://github.com/hardi/portfolio"
-              onClick={() => { }} // Just to enable non-coming soon look if needed, but it has github link so it's fine
+              onClick={() => { }}
             />
           </motion.div>
         </div>
       </section>
+
+      {/* Insights Section */}
+      <InsightsSection />
 
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-white/5 mt-auto">
@@ -220,7 +229,7 @@ function HomeContent() {
       <ProjectDetailsModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        project={selectedProject}
+        project={selectedProject as ProjectDetails | null}
       />
     </main>
   );

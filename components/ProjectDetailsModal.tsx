@@ -15,6 +15,7 @@ export interface ProjectDetails {
     challenges?: string;
     architecture?: string;
     links?: { label: string; url: string }[];
+    media?: { type: 'image' | 'video'; url: string; caption: string }[];
 }
 
 interface ProjectDetailsModalProps {
@@ -82,6 +83,24 @@ export default function ProjectDetailsModal({ isOpen, onClose, project }: Projec
 
                             {/* Scrollable Content */}
                             <div className="overflow-y-auto p-6 sm:p-8 custom-scrollbar">
+
+                                {/* Media Gallery */}
+                                {project.media && project.media.length > 0 && (
+                                    <div className="mb-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {project.media.map((item, idx) => (
+                                            <div key={idx} className="relative aspect-video rounded-xl overflow-hidden group bg-white/5 border border-white/10">
+                                                <img
+                                                    src={item.url}
+                                                    alt={item.caption}
+                                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                                                    <p className="text-sm font-medium text-white">{item.caption}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
 
                                 {/* Full Description */}
                                 <div className="mb-10">

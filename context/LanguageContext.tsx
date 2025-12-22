@@ -4,6 +4,12 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 
 type Language = "en" | "zh";
 
+export interface ProjectMedia {
+    type: 'image' | 'video';
+    url: string;
+    caption: string;
+}
+
 export interface ProjectData {
     id: string;
     title: string;
@@ -14,6 +20,21 @@ export interface ProjectData {
     techStack: { category: string; skills: string[] }[];
     architecture?: string;
     links?: { label: string; url: string }[];
+    media?: ProjectMedia[];
+}
+
+export interface InsightData {
+    id: string;
+    title: string;
+    summary: string;
+    date: string;
+    readTime: string;
+}
+
+export interface AboutData {
+    title: string;
+    story: string;
+    philosophy: string;
 }
 
 interface LanguageContextType {
@@ -21,12 +42,16 @@ interface LanguageContextType {
     setLanguage: (lang: Language) => void;
     t: (key: string) => string;
     getProjectData: (id: string) => ProjectData | null;
+    insights: InsightData[];
+    about: AboutData;
 }
 
 const translations = {
     en: {
         "nav.projects": "Projects",
         "nav.expertise": "Expertise",
+        "nav.insights": "Insights",
+        "nav.about": "About",
         "hero.badge": "Available for new opportunities",
         "hero.title.prefix": "Fusing",
         "hero.title.highlight": "Intelligence",
@@ -50,10 +75,15 @@ const translations = {
         "project.coming_soon": "Coming Soon",
         "footer.rights": "All rights reserved.",
         "btn.read_more": "Read More",
+        "insights.title": "Technical Insights",
+        "insights.subtitle": "Thoughts on architecture, performance, and engineering.",
+        "about.cta": "Download CV",
     },
     zh: {
         "nav.projects": "项目案例",
         "nav.expertise": "专业技能",
+        "nav.insights": "技术洞见",
+        "nav.about": "关于我",
         "hero.badge": "接受新项目合作",
         "hero.title.prefix": "融合",
         "hero.title.highlight": "智慧",
@@ -77,6 +107,9 @@ const translations = {
         "project.coming_soon": "暂未开放",
         "footer.rights": "保留所有权利。",
         "btn.read_more": "了解更多",
+        "insights.title": "技术洞见",
+        "insights.subtitle": "关于架构、性能与工程化的思考。",
+        "about.cta": "下载简历",
     },
 };
 
@@ -99,10 +132,14 @@ const projectData: Record<Language, Record<string, ProjectData>> = {
             ],
             techStack: [
                 { category: "Frontend", skills: ["React", "TypeScript", "Tailwind CSS", "Zustand", "TradingView Lib"] },
-                { category: "Backend", skills: ["NestJS", "Node.js", "Prisma", "Socket.io", "RxJS"] },
+                { category: "Backend", skills: ["NestJS", "Node.js", "Python (CTP Gateway)", "Prisma", "Socket.io", "RxJS"] },
                 { category: "Data & Infra", skills: ["PostgreSQL", "Redis", "Docker", "TimescaleDB"] }
             ],
-            architecture: "Microservices-inspired modular architecture. Market Data Gateway streams ticks via Redis Pub/Sub to the Matching Engine and Data Service. The Frontend connects via WebSocket for real-time updates of Order Book, Quotes, and Account State. The entire system is type-safe end-to-end using shared TypeScript DTOs."
+            architecture: "Microservices-inspired modular architecture. Market Data Gateway streams ticks via Redis Pub/Sub to the Matching Engine and Data Service. The Frontend connects via WebSocket for real-time updates of Order Book, Quotes, and Account State. The entire system is type-safe end-to-end using shared TypeScript DTOs.",
+            media: [
+                { type: 'image', url: 'https://placehold.co/800x450/1e1e1e/3b82f6?text=K-Line+Chart', caption: 'Real-time K-Line Charting with TradingView' },
+                { type: 'image', url: 'https://placehold.co/800x450/1e1e1e/8b5cf6?text=Order+Entry', caption: 'High-Performance Order Entry Panel' }
+            ]
         }
     },
     zh: {
@@ -123,11 +160,41 @@ const projectData: Record<Language, Record<string, ProjectData>> = {
             ],
             techStack: [
                 { category: "前端", skills: ["React", "TypeScript", "Tailwind CSS", "Zustand", "TradingView Lib"] },
-                { category: "后端", skills: ["NestJS", "Node.js", "Prisma", "Socket.io", "RxJS"] },
+                { category: "后端", skills: ["NestJS", "Node.js", "Python (CTP Gateway)", "Prisma", "Socket.io", "RxJS"] },
                 { category: "数据与设施", skills: ["PostgreSQL", "Redis", "Docker", "TimescaleDB"] }
             ],
-            architecture: "微服务灵感的模块化架构。行情网关通过 Redis Pub/Sub 将 Tick 数据流式传输到撮合引擎和数据服务。前端通过 WebSocket 连接以实时更新订单簿、行情和账户状态。整个系统使用共享的 TypeScript DTO 实现端到端的类型安全。"
+            architecture: "微服务灵感的模块化架构。行情网关通过 Redis Pub/Sub 将 Tick 数据流式传输到撮合引擎和数据服务。前端通过 WebSocket 连接以实时更新订单簿、行情和账户状态。整个系统使用共享的 TypeScript DTO 实现端到端的类型安全。",
+            media: [
+                { type: 'image', url: 'https://placehold.co/800x450/1e1e1e/3b82f6?text=Real-time+K-Line', caption: 'TradingView 实时 K 线图表' },
+                { type: 'image', url: 'https://placehold.co/800x450/1e1e1e/8b5cf6?text=Order+Execution', caption: '高性能下单面板' }
+            ]
         }
+    }
+};
+
+const insightsData: Record<Language, InsightData[]> = {
+    en: [
+        { id: "1", title: "Building a Sub-millisecond Matching Engine with Node.js", summary: "Exploring the challenges of event loops, memory management, and data structures when every microsecond counts.", date: "Nov 2024", readTime: "8 min read" },
+        { id: "2", title: "Optimizing React Performance for Real-time Market Data", summary: "Techniques for handling thousands of updates per second without freezing the UI: throttling, web workers, and canvas rendering.", date: "Oct 2024", readTime: "6 min read" },
+        { id: "3", title: "Why I chose Postgres over MongoDB for Financial Data", summary: "ACID compliance, time-series capabilities with TimescaleDB, and why structured data matters in fintech.", date: "Sep 2024", readTime: "5 min read" }
+    ],
+    zh: [
+        { id: "1", title: "使用 Node.js 构建亚毫秒级撮合引擎", summary: "探讨在分秒必争时，事件循环、内存管理和数据结构面临的挑战。", date: "2024年11月", readTime: "8 分钟阅读" },
+        { id: "2", title: "实时行情下的 React 性能优化", summary: "如何在不卡顿 UI 的情况下每秒处理数千次即时更新：节流、Web Workers 和 Canvas 渲染。", date: "2024年10月", readTime: "6 分钟阅读" },
+        { id: "3", title: "为何在金融数据上选择 PG 而非 MongoDB", summary: "ACID 合规性、TimescaleDB 的时序能力，以及为何结构化数据在金融科技中至关重要。", date: "2024年9月", readTime: "5 分钟阅读" }
+    ]
+};
+
+const aboutData: Record<Language, AboutData> = {
+    en: {
+        title: "From Interface to Infrastructure.",
+        story: "With years of experience as a Frontend Engineer, I often felt restricted by the boundaries of my role and the friction in backend integration. I sought a project where I could architect the entire stack to satisfy my curiosity for complete engineering structures. An invitation to develop a trading platform for a futures company became my catalyst—giving me the perfect stage to build a high-performance system from the ground up.",
+        philosophy: "I believe true engineering freedom comes from understanding the full stack. My goal is to bridge the gap between design and logic, creating seamless, high-performance experiences born from a unified vision."
+    },
+    zh: {
+        title: "从界面到架构的跨越",
+        story: "作为拥有多年经验的前端工程师，我曾受困于仅负责前端开发时与后端交互的种种局限。我对探索完整工程结构的渴望愈发强烈，一直寻找能够从零搭建前后端通盘项目的机会。正逢一家期货交易公司的邀约，我以此为契机，将对全栈架构的热情转化为行动，致力于打造一个高性能、一体化的交易平台。",
+        philosophy: "我相信真正的工程自由源于对全链路的掌控。我的目标是消除设计与数据之间的隔阂，用全局的视角构建流畅、高效且浑然一体的系统。"
     }
 };
 
@@ -144,8 +211,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         return projectData[language][id] || null;
     };
 
+    const insights = insightsData[language];
+    const about = aboutData[language];
+
     return (
-        <LanguageContext.Provider value={{ language, setLanguage, t, getProjectData }}>
+        <LanguageContext.Provider value={{ language, setLanguage, t, getProjectData, insights, about }}>
             {children}
         </LanguageContext.Provider>
     );
