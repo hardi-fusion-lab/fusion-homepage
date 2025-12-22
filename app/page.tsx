@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Code2,
@@ -11,11 +12,22 @@ import Image from "next/image";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ProjectCard from "@/components/ProjectCard";
 import SkillBadge from "@/components/SkillBadge";
-import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
+import ProjectDetailsModal, { ProjectDetails } from "@/components/ProjectDetailsModal";
+import { LanguageProvider, useLanguage, ProjectData } from "@/context/LanguageContext";
 import Logo from "@/components/Logo";
 
 function HomeContent() {
-  const { t } = useLanguage();
+  const { t, getProjectData } = useLanguage();
+  const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleProjectClick = (projectId: string) => {
+    const data = getProjectData(projectId);
+    if (data) {
+      setSelectedProject(data);
+      setIsModalOpen(true);
+    }
+  };
 
   const container = {
     hidden: { opacity: 0 },
@@ -28,7 +40,7 @@ function HomeContent() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col relative">
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-black/50 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -63,7 +75,7 @@ function HomeContent() {
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              {t("hero.title.prefix")} <span className="text-gradient">{t("hero.title.highlight")}</span> {t("hero.title.suffix")}
+              {t("hero.title.prefix")} <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">{t("hero.title.highlight")}</span> {t("hero.title.suffix")}
             </h1>
 
             <p className="text-xl text-gray-400 mb-10 max-w-2xl leading-relaxed">
@@ -98,7 +110,7 @@ function HomeContent() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Frontend */}
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500/30 transition-colors duration-300">
               <div className="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center mb-6 text-blue-400">
                 <Code2 size={24} />
               </div>
@@ -113,7 +125,7 @@ function HomeContent() {
             </div>
 
             {/* Backend */}
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-colors duration-300">
               <div className="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center mb-6 text-purple-400">
                 <Terminal size={24} />
               </div>
@@ -128,7 +140,7 @@ function HomeContent() {
             </div>
 
             {/* Cloud/DevOps */}
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-green-500/30 transition-colors duration-300">
               <div className="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center mb-6 text-green-400">
                 <Cloud size={24} />
               </div>
@@ -167,7 +179,7 @@ function HomeContent() {
               description={t("project.futures.desc")}
               tags={["React", "NestJS", "WebSocket", "PostgreSQL", "High Performance"]}
               featured={true}
-              link="#"
+              onClick={() => handleProjectClick("futures_platform")}
             />
 
             <ProjectCard
@@ -184,6 +196,7 @@ function HomeContent() {
               tags={["Next.js", "React", "Tailwind", "Framer Motion"]}
               featured={false}
               github="https://github.com/hardi/portfolio"
+              onClick={() => { }} // Just to enable non-coming soon look if needed, but it has github link so it's fine
             />
           </motion.div>
         </div>
@@ -198,10 +211,17 @@ function HomeContent() {
           <div className="flex gap-6">
             <a href="https://github.com/hardihsu" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">GitHub</a>
             <a href="#" className="text-gray-500 hover:text-white transition-colors">LinkedIn</a>
-            <a href="https://x.com/hardihsu" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">X</a>
+            <a href="https://x.com/hardihsuu" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">X</a>
           </div>
         </div>
       </footer>
+
+      {/* Project Details Modal */}
+      <ProjectDetailsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        project={selectedProject}
+      />
     </main>
   );
 }
