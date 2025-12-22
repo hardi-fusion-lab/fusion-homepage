@@ -79,6 +79,7 @@ const translations = {
         "insights.title": "Technical Insights",
         "insights.subtitle": "Thoughts on architecture, performance, and engineering.",
         "about.cta": "View CV",
+        "collaborators.title": "Collaborators",
     },
     zh: {
         "nav.projects": "项目案例",
@@ -111,6 +112,7 @@ const translations = {
         "insights.title": "技术洞见",
         "insights.subtitle": "关于架构、性能与工程化的思考。",
         "about.cta": "查看简历",
+        "collaborators.title": "合作伙伴",
     },
 };
 

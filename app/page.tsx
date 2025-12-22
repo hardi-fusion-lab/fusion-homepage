@@ -16,6 +16,7 @@ import { LanguageProvider, useLanguage, ProjectData } from "@/context/LanguageCo
 import Logo from "@/components/Logo";
 import AboutSection from "@/components/AboutSection";
 import InsightsSection from "@/components/InsightsSection";
+import CollaboratorsSection from "@/components/CollaboratorsSection";
 
 function HomeContent() {
   const { t, getProjectData } = useLanguage();
@@ -210,6 +211,9 @@ function HomeContent() {
 
       {/* Insights Section */}
       <InsightsSection />
+
+      {/* Collaborators Section */}
+      <CollaboratorsSection />
 
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-white/5 mt-auto">
