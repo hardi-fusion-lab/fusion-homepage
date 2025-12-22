@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
-import { Download } from "lucide-react";
+import { Eye } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function AboutSection() {
@@ -27,14 +27,17 @@ export default function AboutSection() {
                             </p>
                         </div>
 
-                        {/* Resume Download - Disabled for now
                         <div className="mt-8">
-                            <button className="flex items-center gap-2 px-6 py-3 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition-colors">
-                                <Download size={18} />
+                            <a
+                                href={about.resumeUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition-colors"
+                            >
+                                <Eye size={18} />
                                 {t("about.cta")}
-                            </button>
+                            </a>
                         </div>
-                        */}
                     </motion.div>
 
                     <motion.div

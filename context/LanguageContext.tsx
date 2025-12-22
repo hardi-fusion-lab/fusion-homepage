@@ -35,6 +35,7 @@ export interface AboutData {
     title: string;
     story: string;
     philosophy: string;
+    resumeUrl: string;
 }
 
 interface LanguageContextType {
@@ -77,7 +78,7 @@ const translations = {
         "btn.read_more": "Read More",
         "insights.title": "Technical Insights",
         "insights.subtitle": "Thoughts on architecture, performance, and engineering.",
-        "about.cta": "Download CV",
+        "about.cta": "View CV",
     },
     zh: {
         "nav.projects": "项目案例",
@@ -109,7 +110,7 @@ const translations = {
         "btn.read_more": "了解更多",
         "insights.title": "技术洞见",
         "insights.subtitle": "关于架构、性能与工程化的思考。",
-        "about.cta": "下载简历",
+        "about.cta": "查看简历",
     },
 };
 
@@ -189,12 +190,14 @@ const aboutData: Record<Language, AboutData> = {
     en: {
         title: "From Interface to Infrastructure.",
         story: "With years of experience as a Frontend Engineer, I often felt restricted by the boundaries of my role and the friction in backend integration. I sought a project where I could architect the entire stack to satisfy my curiosity for complete engineering structures. An invitation to develop a trading platform for a futures company became my catalyst—giving me the perfect stage to build a high-performance system from the ground up.",
-        philosophy: "I believe true engineering freedom comes from understanding the full stack. My goal is to bridge the gap between design and logic, creating seamless, high-performance experiences born from a unified vision."
+        philosophy: "I believe true engineering freedom comes from understanding the full stack. My goal is to bridge the gap between design and logic, creating seamless, high-performance experiences born from a unified vision.",
+        resumeUrl: "https://docs.google.com/document/d/1jnD8VthgmQIbBbXIDxERZEuXRBJrPFTE3k4wx1m5KMQ/edit?usp=sharing"
     },
     zh: {
         title: "从界面到架构的跨越",
         story: "作为拥有多年经验的前端工程师，我曾受困于仅负责前端开发时与后端交互的种种局限。我对探索完整工程结构的渴望愈发强烈，一直寻找能够从零搭建前后端通盘项目的机会。正逢一家期货交易公司的邀约，我以此为契机，将对全栈架构的热情转化为行动，致力于打造一个高性能、一体化的交易平台。",
-        philosophy: "我相信真正的工程自由源于对全链路的掌控。我的目标是消除设计与数据之间的隔阂，用全局的视角构建流畅、高效且浑然一体的系统。"
+        philosophy: "我相信真正的工程自由源于对全链路的掌控。我的目标是消除设计与数据之间的隔阂，用全局的视角构建流畅、高效且浑然一体的系统。",
+        resumeUrl: "https://docs.google.com/document/d/1OqKzKPzlbXtf_Ps7kxJob_cMuS3kfFoyawXwvKR-cUc/edit?usp=sharing"
     }
 };
 
