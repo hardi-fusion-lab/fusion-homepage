@@ -45,7 +45,7 @@ export default function CollaboratorsSection() {
                             transition={{ delay: index * 0.1 }}
                             className="group flex flex-col items-center gap-4"
                         >
-                            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-blue-500/50 transition-colors duration-300">
+                            <div className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-blue-500/50 transition-colors duration-300">
                                 <img
                                     src={collab.image}
                                     alt={collab.name}
