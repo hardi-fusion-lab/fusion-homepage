@@ -5,8 +5,13 @@ import { useLanguage, InsightData } from "@/context/LanguageContext";
 import InsightCard from "./InsightCard";
 import InsightDetailsModal from "./InsightDetailsModal";
 
-export default function InsightsSection() {
-    const { t, insights } = useLanguage();
+// Define the interface for props, extending/compatible with InsightData
+interface InsightsSectionProps {
+    insights: InsightData[];
+}
+
+export default function InsightsSection({ insights }: InsightsSectionProps) {
+    const { t } = useLanguage();
     const [selectedInsight, setSelectedInsight] = useState<InsightData | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
