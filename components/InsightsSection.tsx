@@ -1,10 +1,19 @@
 "use client";
 
-import { useLanguage } from "@/context/LanguageContext";
+import { useState } from "react";
+import { useLanguage, InsightData } from "@/context/LanguageContext";
 import InsightCard from "./InsightCard";
+import InsightDetailsModal from "./InsightDetailsModal";
 
 export default function InsightsSection() {
     const { t, insights } = useLanguage();
+    const [selectedInsight, setSelectedInsight] = useState<InsightData | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleConstraintClick = (insight: InsightData) => {
+        setSelectedInsight(insight);
+        setIsModalOpen(true);
+    };
 
     return (
         <section id="insights" className="py-20 px-6 border-t border-white/5">
@@ -22,10 +31,17 @@ export default function InsightsSection() {
                             summary={insight.summary}
                             date={insight.date}
                             readTime={insight.readTime}
+                            onClick={() => handleConstraintClick(insight)}
                         />
                     ))}
                 </div>
             </div>
+
+            <InsightDetailsModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                insight={selectedInsight}
+            />
         </section>
     );
 }

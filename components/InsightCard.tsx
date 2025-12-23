@@ -8,12 +8,14 @@ interface InsightCardProps {
     summary: string;
     date: string;
     readTime: string;
+    onClick?: () => void;
 }
 
-export default function InsightCard({ title, summary, date, readTime }: InsightCardProps) {
+export default function InsightCard({ title, summary, date, readTime, onClick }: InsightCardProps) {
     return (
         <motion.div
             whileHover={{ y: -5 }}
+            onClick={onClick}
             className="group p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer"
         >
             <div className="flex items-center gap-4 text-xs text-gray-400 mb-4">
