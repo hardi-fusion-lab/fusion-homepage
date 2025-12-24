@@ -28,7 +28,16 @@ export default function InsightsSection({ insights }: InsightsSectionProps) {
                     <p className="text-gray-400">{t("insights.subtitle")}</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <div className="bg-white/5 border border-white/10 rounded-2xl p-8 max-w-lg">
+                        <div className="text-4xl mb-4">🚧</div>
+                        <h3 className="text-xl font-semibold mb-2 text-gray-200">
+                            Technical Docs Under Construction
+                        </h3>
+                    </div>
+                </div>
+
+                <div className="hidden grid-cols-1 md:grid-cols-3 gap-6">
                     {insights.map((insight) => (
                         <InsightCard
                             key={insight.id}

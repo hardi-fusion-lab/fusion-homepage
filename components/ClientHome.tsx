@@ -220,7 +220,8 @@ function HomeContent({ initialInsightsEn, initialInsightsZh }: ClientHomeProps) 
             <InsightsSection insights={insights} />
 
             {/* Collaborators Section */}
-            <CollaboratorsSection />
+            {/* CollaboratorsSection */}
+            {/* <CollaboratorsSection /> */}
 
             {/* Footer */}
             <footer className="py-12 px-6 border-t border-white/5 mt-auto">
