@@ -149,8 +149,8 @@ const projectData: Record<Language, Record<string, ProjectData>> = {
             ],
             architecture: "Microservices-inspired modular architecture. Market Data Gateway streams ticks via Redis Pub/Sub to the Matching Engine and Data Service. The Frontend connects via WebSocket for real-time updates of Order Book, Quotes, and Account State. The entire system is type-safe end-to-end using shared TypeScript DTOs.",
             media: [
-                { type: 'image', url: 'https://placehold.co/800x450/1e1e1e/3b82f6?text=K-Line+Chart', caption: 'Real-time K-Line Charting with TradingView' },
-                { type: 'image', url: 'https://placehold.co/800x450/1e1e1e/8b5cf6?text=Order+Entry', caption: 'High-Performance Order Entry Panel' }
+                { type: 'image', url: '/kline-chart.png', caption: 'Real-time K-Line Charting with TradingView' },
+                { type: 'image', url: '/futures-platform-dashboard.png', caption: 'Positions & Orders Management' }
             ]
         }
     },
@@ -177,8 +177,8 @@ const projectData: Record<Language, Record<string, ProjectData>> = {
             ],
             architecture: "微服务灵感的模块化架构。行情网关通过 Redis Pub/Sub 将 Tick 数据流式传输到撮合引擎和数据服务。前端通过 WebSocket 连接以实时更新订单簿、行情和账户状态。整个系统使用共享的 TypeScript DTO 实现端到端的类型安全。",
             media: [
-                { type: 'image', url: 'https://placehold.co/800x450/1e1e1e/3b82f6?text=Real-time+K-Line', caption: 'TradingView 实时 K 线图表' },
-                { type: 'image', url: 'https://placehold.co/800x450/1e1e1e/8b5cf6?text=Order+Execution', caption: '高性能下单面板' }
+                { type: 'image', url: '/kline-chart.png', caption: 'Real-time K-Line Charting with TradingView' },
+                { type: 'image', url: '/futures-platform-dashboard.png', caption: 'Positions & Orders Management' }
             ]
         }
     }
