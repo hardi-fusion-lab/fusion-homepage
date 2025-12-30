@@ -57,7 +57,7 @@ export default function AboutSection() {
                             />
 
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-8 text-center">
-                                <div className="text-6xl font-bold text-white mb-2 shadow-sm drop-shadow-lg">7+</div>
+                                <div className="text-6xl font-bold text-white mb-2 shadow-sm drop-shadow-lg">8+</div>
                                 <div className="text-sm text-gray-300 uppercase tracking-widest font-medium text-shadow">Years of Experience</div>
                             </div>
                         </div>
