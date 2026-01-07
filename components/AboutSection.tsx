@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
-import { Eye } from "lucide-react";
+// import { Eye } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function AboutSection() {
@@ -27,7 +27,7 @@ export default function AboutSection() {
                             </p>
                         </div>
 
-                        <div className="mt-8">
+                        {/* <div className="mt-8">
                             <a
                                 href={about.resumeUrl}
                                 target="_blank"
@@ -37,7 +37,7 @@ export default function AboutSection() {
                                 <Eye size={18} />
                                 {t("about.cta")}
                             </a>
-                        </div>
+                        </div> */}
                     </motion.div>
 
                     <motion.div
