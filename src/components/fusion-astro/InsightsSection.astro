@@ -1,0 +1,42 @@
+---
+import InsightCard from './InsightCard.astro';
+import type { InsightData } from '@/types';
+
+interface Props {
+  insights: InsightData[];
+}
+
+const { insights } = Astro.props;
+---
+
+<section id="insights" class="py-20 px-6 border-t border-white/5">
+    <div class="max-w-7xl mx-auto">
+        <div class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">Technical Insights</h2>
+            <p class="text-gray-400">Deep dives into architecture, performance, and engineering challenges.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {insights.length > 0 ? (
+                insights.map((insight) => (
+                    <InsightCard
+                        title={insight.title}
+                        summary={insight.summary}
+                        date={insight.date}
+                        readTime={insight.readTime}
+                        href={`/insights/${insight.id}`}
+                        category={insight.category}
+                    />
+                ))
+            ) : (
+                <div class="col-span-3 flex flex-col items-center justify-center py-12 text-center bg-white/5 border border-white/10 rounded-2xl">
+                    <div class="text-4xl mb-4">🚧</div>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-200">
+                        Technical Docs Under Construction
+                    </h3>
+                    <p class="text-gray-400">Check back later for more updates.</p>
+                </div>
+            )}
+        </div>
+    </div>
+</section>

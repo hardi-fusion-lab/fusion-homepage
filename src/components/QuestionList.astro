@@ -1,0 +1,49 @@
+---
+import QuestionCard from './QuestionCard.astro';
+import GlobalSearch from './GlobalSearch';
+import type { CollectionEntry } from 'astro:content';
+import { CATEGORIES } from '@/lib/categories';
+
+interface Props {
+  questions: CollectionEntry<'questions'>[];
+  currentSlug?: string;
+  category?: string;
+}
+
+const { questions = [], currentSlug, category } = Astro.props;
+const categoryInfo = CATEGORIES.find(c => c.id === category);
+---
+
+<section class="w-full md:w-[400px] flex flex-col border-r border-slate-200 dark:border-slate-800 bg-[var(--card-bg)] h-full">
+  <header class="p-4 border-b border-slate-200 dark:border-slate-800">
+    <div class="space-y-4">
+      <GlobalSearch client:load />
+      {category && (
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-slate-900 dark:text-white">{categoryInfo?.name || category}</h2>
+          <p class="text-xs text-slate-500">{questions.length} questions</p>
+        </div>
+      )}
+    </div>
+  </header>
+
+  <div class="flex-1 overflow-y-auto custom-scrollbar">
+    <div class="divide-y divide-slate-100 dark:divide-slate-800" id="question-list">
+      {Array.isArray(questions) && questions.map((question) => (
+        <QuestionCard 
+          slug={question.slug}
+          title={question.data.title}
+          category={question.data.category}
+          subCategory={question.data.subCategory}
+
+          isSelected={currentSlug === question.slug}
+        />
+      ))}
+      {questions.length === 0 && (
+         <div class="p-8 text-center text-slate-500 text-sm">
+           No questions found.
+         </div>
+      )}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,38 @@
+---
+import Logo from './Logo.astro';
+import { Sparkles, BookOpen } from 'lucide-react';
+---
+
+<nav class="fixed top-0 w-full z-50 border-b border-white/5 bg-black/50 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2 group">
+            <Logo class="w-10 h-10 transition-transform group-hover:scale-110" />
+            <span class="font-bold text-lg tracking-tight text-white group-hover:text-blue-400 transition-colors">Hardi Fusion Lab</span>
+        </a>
+        <div class="flex items-center gap-4 sm:gap-6">
+            <a href="/#projects" class="text-sm text-gray-400 hover:text-white transition-colors hidden md:block">Projects</a>
+            <a href="/#skills" class="text-sm text-gray-400 hover:text-white transition-colors hidden md:block">Expertise</a>
+            
+            <a href="/insights" class="group/nav flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-all">
+                <BookOpen size={16} className="text-blue-400/50 group-hover/nav:text-blue-400 transition-colors" />
+                <span>Insights</span>
+            </a>
+
+            <a 
+                href="/questions" 
+                class="relative group/nav-cta overflow-hidden px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-sm font-semibold text-blue-400 hover:text-white transition-all duration-300 hover:border-blue-400 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] active:scale-95"
+            >
+                <div class="relative flex items-center gap-2 text-shadow-sm">
+                    <Sparkles size={14} className="group-hover/nav-cta:animate-pulse" />
+                    <span class="tracking-wide">Question Bank</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<style>
+    :global(html) {
+        scroll-padding-top: 4rem;
+    }
+</style>

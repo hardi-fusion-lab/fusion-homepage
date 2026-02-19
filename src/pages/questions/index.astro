@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Sidebar from '@/components/Sidebar.astro';
+import QuestionList from '@/components/QuestionList.astro';
+
+const allQuestions = await getCollection('questions');
+const sortedQuestions = allQuestions.sort((a, b) => {
+  if (a.data.order !== b.data.order) {
+    return a.data.order - b.data.order;
+  }
+  return a.data.title.localeCompare(b.data.title);
+});
+---
+
+<BaseLayout>
+  <div class="flex h-screen w-full bg-bg-dark overflow-hidden">
+    <Sidebar />
+    
+    <!-- Question List -->
+    <QuestionList questions={sortedQuestions} />
+
+    <!-- Empty State -->
+    <main class="flex-1 flex flex-col items-center justify-center bg-bg-dark text-slate-500 p-8 text-center">
+      <span class="material-symbols-outlined text-6xl mb-4 opacity-20">article</span>
+      <h2 class="text-xl font-semibold text-slate-300">Select a question to view details</h2>
+      <p class="mt-2 max-w-xs">Explore deep-dive front-end engineering topics from our curated library.</p>
+    </main>
+  </div>
+</BaseLayout>

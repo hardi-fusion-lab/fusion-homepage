@@ -1,0 +1,31 @@
+# Astro
+.astro/
+dist/
+
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Old files
+App.tsx
+index.tsx
+index.html
+vite.config.ts
+constants.tsx
+types.ts
+services/

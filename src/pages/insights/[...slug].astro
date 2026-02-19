@@ -1,0 +1,125 @@
+---
+import StudioLayout from '@/layouts/StudioLayout.astro';
+import Navigation from '@/components/fusion-astro/Navigation.astro';
+import Footer from '@/components/fusion-astro/Footer.astro';
+import { getCollection, render } from 'astro:content';
+import { ArrowLeft, Clock, Calendar, Share2 } from 'lucide-react';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const posts = await getCollection('insights');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<StudioLayout title={`${post.data.title} | Hardi Insights`} description={post.data.summary}>
+  <div class="bg-black min-h-screen text-white flex flex-col">
+    <Navigation />
+    
+    <main class="flex-grow pt-32 pb-24 px-6">
+      <article class="max-w-3xl mx-auto animate-fade-in-up">
+        <!-- Breadcrumb / Back Navigation -->
+        <nav class="mb-12">
+          <a href="/insights" class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-blue-400 transition-all group">
+            <div class="p-1.5 rounded-full bg-white/5 border border-white/10 group-hover:border-blue-500/30 transition-colors">
+              <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
+            </div>
+            Back to Insights
+          </a>
+        </nav>
+
+        <header class="mb-12">
+          <div class="flex items-center gap-4 mb-6">
+            <span class="px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] bg-blue-500/10 text-blue-400 rounded-lg border border-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]">
+              {post.data.category}
+            </span>
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <Calendar size={13} />
+              <span>{new Date(post.data.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            </div>
+            <span class="hidden sm:block text-white/10">•</span>
+            <div class="hidden sm:flex items-center gap-2 text-xs text-gray-500">
+              <Clock size={13} />
+              <span>7 min read</span>
+            </div>
+          </div>
+
+          <h1 class="text-4xl md:text-6xl font-black text-white mb-8 leading-[1.1] tracking-tighter">
+            {post.data.title}
+          </h1>
+          
+          <div class="flex flex-wrap gap-2 mb-10">
+            {post.data.tags.map((tag: string) => (
+              <span class="px-3 py-1 rounded-full bg-white/5 text-[11px] font-semibold text-gray-400 border border-white/10 hover:border-blue-500/30 transition-colors">
+                #{tag}
+              </span>
+            ))}
+          </div>
+
+          <div class="p-6 rounded-3xl bg-blue-500/5 border border-blue-500/10 text-gray-300 italic text-lg leading-relaxed shadow-inner">
+            "{post.data.summary}"
+          </div>
+        </header>
+
+        <div class="prose prose-invert prose-blue max-w-none 
+          prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-white
+          prose-p:text-gray-300 prose-p:leading-relaxed prose-p:text-lg
+          prose-strong:text-white prose-strong:font-bold
+          prose-code:text-blue-300 prose-code:bg-blue-500/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none
+          prose-pre:bg-white/[0.03] prose-pre:border prose-pre:border-white/10 prose-pre:rounded-2xl prose-pre:p-6
+          prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300 transition-colors
+          prose-img:rounded-3xl prose-img:border prose-img:border-white/10 shadow-2xl">
+          <Content />
+        </div>
+        
+        <div class="mt-20 pt-12 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-8">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 p-[1px]">
+              <div class="w-full h-full rounded-full bg-black flex items-center justify-center font-bold text-lg">H</div>
+            </div>
+            <div>
+              <p class="text-white font-bold">Hardi Hsu</p>
+              <p class="text-gray-500 text-sm">Full-Stack Engineer & Quant Developer</p>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-4">
+            <a 
+              href="https://x.com/hardihsuu" 
+              target="_blank" 
+              class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-bold text-white transition-all active:scale-95"
+            >
+              <Share2 size={16} className="text-blue-400" />
+              Discuss on X
+            </a>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <Footer />
+  </div>
+</StudioLayout>
+
+<style>
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fade-in-up {
+    animation: fade-in-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<section class="relative py-24 overflow-hidden">
+  <!-- Dynamic Background Grid -->
+  <div class="absolute inset-0 -z-10">
+    <div class="absolute inset-0 bg-[#050505]"></div>
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-blue-500/10 blur-[120px] rounded-full -z-20"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 relative">
+    <div class="max-w-3xl">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-bold text-blue-400 mb-6 uppercase tracking-widest animate-fade-in">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+        </span>
+        Knowledge Hub
+      </div>
+      
+      <h1 class="text-5xl md:text-7xl font-black text-white mb-8 tracking-tighter leading-none animate-slide-up">
+        {title}<span class="text-blue-500">.</span>
+      </h1>
+      
+      <p class="text-xl text-gray-400 leading-relaxed animate-slide-up opacity-90" style="animation-delay: 0.1s">
+        {description}
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-out forwards;
+  }
+  .animate-slide-up {
+    animation: slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+</style>

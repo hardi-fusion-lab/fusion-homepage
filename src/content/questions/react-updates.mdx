@@ -1,0 +1,66 @@
+---
+title: "React 16-19 主要更新了什么？"
+category: "react"
+subCategory: "Core Concepts"
+difficulty: "Hard"
+order: 1
+---
+
+#### React 15 (Stack Reconciler)
+- **机制**: 递归比对，同步更新。一旦开始渲染，主线程被占用直到完成。
+- **痛点**: 在处理大型组件树时，容易造成页面卡顿（丢帧）。
+
+#### React 16 (Fiber Reconciler)
+- **革命性变化**: 引入 Fiber 架构。
+- **核心思想**: 将渲染任务拆分为小片段 (Unit of Work)。
+- **能力**: 任务可暂停、中止、复用。虽然架构支持了，但 v16 默认仍是同步渲染模式。
+- **新增**: Error Boundary, Portals, Fragments。
+
+#### React 16.8 (Hooks)
+- **改变**: 函数组件拥有了状态和生命周期。代码复用逻辑从 Mixins/HOCs 进化为 Custom Hooks。
+
+#### React 17 (过渡)
+- **定位**: "No New Features"，主要是为了平滑升级，修复事件委托机制（事件绑定到 root 而非 document）。
+
+#### React 18 (Concurrent React)
+- **核心**: 并发渲染 (Concurrent Rendering) 正式落地。
+- **特性**:
+    - **自动批处理 (Automatic Batching)**: 更多场景下的 setState 合并。
+    - **Transitions**: `startTransition` 区分紧急更新（输入框）和非紧急更新（列表渲染）。
+    - **Suspense**: 服务端渲染 (SSR) 的流式传输 (Streaming HTML)。
+    - **useId**: 用于无障碍和 SSR 的唯一 ID。
+
+#### React 19 (Server Components & The Future)
+- **RSC (React Server Components)**: 组件默认在服务端运行，零 Bundle Size。
+- **Actions**: `useActionState` 等 API 简化数据提交（表单）逻辑。
+- **useOptimistic**: 乐观更新 UI。
+- **Compiler**: React Compiler (自动 Memo) 逐步落地，减少手动 `useMemo/useCallback`。
+
+#### 什么是 Concurrent Mode (并发模式)？
+
+严格来说，现在叫 **Concurrent Features**。它不是一个"开关"，而是一套底层能力。
+
+#### 核心原理
+1.  **可中断渲染**: React 可以在渲染过程中暂停，去处理更高优先级的任务（如用户点击、输入），然后再回来继续渲染。
+2.  **多版本渲染**: 可以在后台渲染一棵新的 UI 树，而不阻塞当前页面的交互。
+
+#### 解决了什么问题？
+- **CPU 密集型任务**: 复杂的列表过滤或计算不会卡死页面。
+- **IO 密集型任务**: 网络请求（Suspense）期间可以保持 UI 响应，或者展示旧 UI 直到新 UI 准备好。
+
+#### 关键 API
+- `useTransition`: 标记非紧急更新。
+  ```javascript
+  const [isPending, startTransition] = useTransition();
+  // 即使 filterList 很慢，输入框也能保持流畅
+  startTransition(() => {
+    setFilter(input);
+  });
+  ```
+- `useDeferredValue`: 延迟更新某个值，类似防抖但更智能（基于渲染帧）。
+
+#### 总结
+
+React 的每一次大版本更新都在解决一个核心矛盾：**日益复杂的 UI 交互** vs **有限的浏览器主线程资源**。从 Fiber 到 Concurrent，React 即使在单线程环境下也模拟出了"多任务操作系统"的调度能力。
+
+

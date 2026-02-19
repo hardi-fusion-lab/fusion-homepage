@@ -1,0 +1,70 @@
+---
+import StudioLayout from '@/layouts/StudioLayout.astro';
+import Navigation from '@/components/fusion-astro/Navigation.astro';
+import Footer from '@/components/fusion-astro/Footer.astro';
+import InsightHero from '@/components/fusion-astro/InsightHero.astro';
+import InsightCard from '@/components/fusion-astro/InsightCard.astro';
+import { getCollection } from 'astro:content';
+
+export const prerender = true;
+
+const insights = await getCollection('insights');
+const sortedInsights = insights.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+
+---
+
+<StudioLayout title="Technical Insights | Hardi Fusion Lab" description="Deep dives into software engineering, high-performance systems, and modern architecture patterns.">
+  <div class="bg-black min-h-screen text-white flex flex-col">
+    <Navigation />
+    
+    <main class="flex-grow pt-16">
+      <!-- High-End Hero Section -->
+      <InsightHero 
+        title="Technical Insights" 
+        description="A sanctuary for engineering deep dives, performance optimization strategies, and the evolving landscape of full-stack architecture."
+      />
+
+      <!-- Articles Grid -->
+      <section class="max-w-7xl mx-auto px-6 pb-32">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {sortedInsights.map((post) => (
+            <div class="animate-fade-in-up" style={`animation-delay: ${0.1}s`}>
+              <InsightCard 
+                title={post.data.title}
+                summary={post.data.summary}
+                href={`/insights/${post.slug}`}
+                date={post.data.date}
+                category={post.data.category}
+                readTime="6 min"
+              />
+            </div>
+          ))}
+        </div>
+
+        {sortedInsights.length === 0 && (
+          <div class="py-32 text-center border border-dashed border-white/10 rounded-3xl bg-white/[0.02]">
+            <p class="text-gray-500 font-medium tracking-wide italic">Generating more insights... check back soon.</p>
+          </div>
+        )}
+      </section>
+    </main>
+    
+    <Footer />
+  </div>
+</StudioLayout>
+
+<style>
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+</style>

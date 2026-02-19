@@ -1,0 +1,58 @@
+---
+title: "手写 Debounce 与 Throttle"
+category: "algorithms"
+subCategory: "Handwriting"
+tags: ["javascript", "performance"]
+order: 10
+---
+
+#### 1. 防抖 (Debounce)
+
+**核心思想**：在事件被触发 n 秒后再执行回调，如果在这 n 秒内又被触发，则重新计时。
+
+```javascript
+function debounce(fn, delay) {
+  let timer = null;
+  
+  return function(...args) {
+    if (timer) clearTimeout(timer);
+    
+    timer = setTimeout(() => {
+      fn.apply(this, args);
+      timer = null;
+    }, delay);
+  }
+}
+
+// Test Case
+const log = debounce(() => console.log('Called!'), 1000);
+log();
+log();
+log();
+// Result: 'Called!' logs only once after 1s
+```
+
+#### 2. 节流 (Throttle)
+
+**核心思想**：规定在一个单位时间内，只能触发一次函数。如果这个单位时间内触发多次函数，只有一次生效。
+
+```javascript
+function throttle(fn, delay) {
+  let last = 0;
+  
+  return function(...args) {
+    const now = Date.now();
+    
+    if (now - last > delay) {
+      fn.apply(this, args);
+      last = now;
+    }
+  }
+}
+
+// Test Case
+const log = throttle(() => console.log('Called!'), 1000);
+log(); // Call 1 - executes
+log(); // Call 2 - ignored
+setTimeout(log, 1100); // Call 3 - executes after 1.1s
+```

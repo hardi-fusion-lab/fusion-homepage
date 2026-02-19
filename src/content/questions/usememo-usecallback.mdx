@@ -1,0 +1,203 @@
+---
+title: "Difference between useMemo and useCallback?"
+category: "react"
+subCategory: "Hooks"
+difficulty: "Medium"
+tags: ["react", "hooks", "performance", "memoization"]
+---
+
+## The Core Difference
+
+Both `useMemo` and `useCallback` are React hooks for memoization, but they memoize different things:
+
+- **`useMemo`**: Memoizes the **result** of a function
+- **`useCallback`**: Memoizes the **function itself**
+
+```jsx
+// useMemo - memoizes the VALUE
+const expensiveValue = useMemo(() => {
+  return computeExpensiveValue(a, b);
+}, [a, b]);
+
+// useCallback - memoizes the FUNCTION
+const memoizedCallback = useCallback(() => {
+  doSomething(a, b);
+}, [a, b]);
+
+// These are equivalent:
+useCallback(fn, deps) === useMemo(() => fn, deps)
+```
+
+---
+
+## When to Use useMemo
+
+Use `useMemo` when you have expensive calculations that you don't want to run on every render.
+
+### Example: Filtering Large Lists
+
+```jsx
+function ProductList({ products, searchTerm }) {
+  // ❌ Without useMemo - filters on EVERY render
+  const filteredProducts = products.filter(p => 
+    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // ✅ With useMemo - only filters when dependencies change
+  const filteredProducts = useMemo(() => {
+    return products.filter(p => 
+      p.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [products, searchTerm]);
+
+  return (
+    <ul>
+      {filteredProducts.map(p => <li key={p.id}>{p.name}</li>)}
+    </ul>
+  );
+}
+```
+
+---
+
+## When to Use useCallback
+
+Use `useCallback` when passing callbacks to optimized child components that rely on reference equality.
+
+### Example: Preventing Child Re-renders
+
+```jsx
+function Parent() {
+  const [count, setCount] = useState(0);
+  const [other, setOther] = useState(0);
+
+  // ❌ Without useCallback - new function every render
+  const handleClick = () => {
+    setCount(c => c + 1);
+  };
+
+  // ✅ With useCallback - same function reference
+  const handleClick = useCallback(() => {
+    setCount(c => c + 1);
+  }, []); // No dependencies - function never changes
+
+  return (
+    <>
+      <button onClick={() => setOther(o => o + 1)}>
+        Other: {other}
+      </button>
+      {/* Child won't re-render when 'other' changes */}
+      <ExpensiveChild onClick={handleClick} />
+    </>
+  );
+}
+
+const ExpensiveChild = React.memo(({ onClick }) => {
+  console.log('ExpensiveChild rendered');
+  return <button onClick={onClick}>Increment</button>;
+});
+```
+
+---
+
+## Common Pitfalls
+
+### 1. Premature Optimization
+
+```jsx
+// ❌ Unnecessary - simple calculation
+const doubled = useMemo(() => count * 2, [count]);
+
+// ✅ Just do it directly
+const doubled = count * 2;
+```
+
+### 2. Missing Dependencies
+
+```jsx
+// ❌ Stale closure - missing dependency
+const handleSubmit = useCallback(() => {
+  api.submit(formData); // formData not in deps!
+}, []);
+
+// ✅ Include all dependencies
+const handleSubmit = useCallback(() => {
+  api.submit(formData);
+}, [formData]);
+```
+
+### 3. Over-memoization
+
+```jsx
+// ❌ Overhead > Benefit
+const Component = () => {
+  const a = useMemo(() => 1, []);
+  const b = useMemo(() => 2, []);
+  const sum = useMemo(() => a + b, [a, b]);
+  
+  return <div>{sum}</div>;
+};
+
+// ✅ Simple is better
+const Component = () => {
+  return <div>{3}</div>;
+};
+```
+
+---
+
+## Performance Measurement
+
+Always measure before optimizing:
+
+```jsx
+import { Profiler } from 'react';
+
+function App() {
+  const onRenderCallback = (
+    id,
+    phase,
+    actualDuration,
+    baseDuration,
+    startTime,
+    commitTime
+  ) => {
+    console.log(`${id} (${phase}) took ${actualDuration}ms`);
+  };
+
+  return (
+    <Profiler id="ProductList" onRender={onRenderCallback}>
+      <ProductList />
+    </Profiler>
+  );
+}
+```
+
+---
+
+## Decision Tree
+
+```
+Need to memoize something?
+│
+├─ Is it a function?
+│  │
+│  ├─ Yes → useCallback
+│  │
+│  └─ Is it passed to a memoized child?
+│     │
+│     ├─ Yes → useCallback
+│     └─ No → Probably don't need it
+│
+└─ Is it a value?
+   │
+   ├─ Is the calculation expensive?
+   │  │
+   │  ├─ Yes → useMemo
+   │  └─ No → Don't memoize
+   │
+   └─ Is it used as a dependency?
+      │
+      ├─ Yes → useMemo (for referential equality)
+      └─ No → Probably don't need it
+```

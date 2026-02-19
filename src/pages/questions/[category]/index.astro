@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Sidebar from '@/components/Sidebar.astro';
+import QuestionList from '@/components/QuestionList.astro';
+import { CATEGORIES } from '@/lib/categories';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const questions = await getCollection('questions');
+  // Generate paths for ALL defined categories, not just those with questions
+  const categories = CATEGORIES.map(c => c.id);
+  
+  return categories.map(category => ({
+    params: { category },
+    props: {
+      questions: questions
+        .filter(q => q.data.category === category)
+        .sort((a, b) => {
+          if (a.data.order !== b.data.order) {
+            return a.data.order - b.data.order;
+          }
+          return a.data.title.localeCompare(b.data.title);
+        })
+    },
+  }));
+}
+
+const { category } = Astro.params;
+const { questions } = Astro.props;
+const categoryInfo = CATEGORIES.find(c => c.id === category);
+---
+
+<BaseLayout title={`${categoryInfo?.name || category} | 前端Q&A`}>
+  <div class="flex h-screen w-full bg-[var(--bg-primary)] overflow-hidden">
+    <Sidebar currentCategory={category} />
+    
+    <!-- Question List -->
+    <QuestionList questions={questions} category={category} />
+
+    <!-- Empty State -->
+    <main class="flex-1 flex flex-col items-center justify-center bg-[var(--bg-primary)] text-slate-500 p-8 text-center">
+      <span class="material-symbols-outlined text-6xl mb-4 opacity-20 text-slate-400 dark:text-slate-600">article</span>
+      <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-200">Select a question to view details</h2>
+      <p class="mt-2 max-w-xs text-slate-500 dark:text-slate-400">Browse {categoryInfo?.name || category} topics from our library.</p>
+    </main>
+  </div>
+</BaseLayout>

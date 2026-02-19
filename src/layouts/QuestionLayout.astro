@@ -1,0 +1,82 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '@/components/Sidebar.astro';
+import QuestionList from '@/components/QuestionList.astro';
+import AIExplainer from '@/components/AIExplainer';
+import { CATEGORIES } from '@/lib/categories';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  question: CollectionEntry<'questions'>;
+}
+
+const { question } = Astro.props;
+const { title, category, subCategory } = question.data;
+const cat = CATEGORIES.find(c => c.id === category);
+
+// Fetch all questions for the side list, filtered by current category
+const allQuestions = await getCollection('questions');
+const relatedQuestions = allQuestions
+  .filter(q => q.data.category === category)
+  .sort((a, b) => {
+    if (a.data.order !== b.data.order) {
+      return a.data.order - b.data.order;
+    }
+    return a.data.title.localeCompare(b.data.title);
+  });
+---
+
+<BaseLayout title={`${title} | Frontend Q&A`} description={title}>
+  <div class="flex h-screen w-full bg-[var(--bg-primary)] overflow-hidden">
+    <!-- 1. Sidebar -->
+    <Sidebar currentCategory={category} />
+    
+    <!-- 2. Question List (Middle Column) -->
+    <!-- 2. Question List (Middle Column) - Hidden on mobile when viewing content -->
+    <div class="hidden md:block h-full">
+      <QuestionList 
+          questions={relatedQuestions} 
+          category={category} 
+          currentSlug={question.slug} 
+      />
+    </div>
+
+    <!-- 3. Content Area (Right Column) -->
+    <main class="flex-1 overflow-y-auto bg-[var(--bg-primary)] custom-scrollbar relative flex flex-col">
+      <!-- Breadcrumb -->
+      <div class="sticky top-0 z-10 px-8 py-3 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex items-center gap-2 text-xs text-slate-500">
+        <a class="hover:text-primary transition-colors uppercase font-bold tracking-widest" href={`/questions/${category}`}>
+          {cat?.name || category}
+        </a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="text-slate-300 font-medium">{subCategory}</span>
+      </div>
+
+      <article class="max-w-4xl mx-auto px-8 py-8 w-full">
+        <!-- Header -->
+        <header class="mb-8">
+          <div class="flex items-center gap-3 mb-2">
+
+
+          </div>
+          <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight leading-tight">
+            {title}
+          </h1>
+
+        </header>
+
+        <!-- Content -->
+        <div class="prose prose-slate dark:prose-invert max-w-none prose-pre:bg-slate-100 dark:prose-pre:bg-slate-900 prose-pre:border prose-pre:border-slate-200 dark:prose-pre:border-slate-800 prose-headings:border-b prose-headings:border-slate-200 dark:prose-headings:border-slate-800 prose-headings:pb-2 prose-headings:text-slate-900 dark:prose-headings:text-slate-100">
+          <slot />
+          
+          <!-- AI Explainer Component -->
+          <AIExplainer client:load topic={title} />
+        </div>
+
+        <!-- Footer -->
+
+      </article>
+    </main>
+  </div>
+</BaseLayout>

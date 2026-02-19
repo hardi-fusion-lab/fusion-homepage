@@ -1,0 +1,192 @@
+---
+import { X, CheckCircle2, Server, Cpu, Layers, Github } from 'lucide-react';
+
+interface TechStackGroup {
+  category: string;
+  skills: string[];
+}
+
+interface MediaItem {
+  type: 'image' | 'video';
+  url: string;
+  caption: string;
+}
+
+interface Props {
+  id: string;
+  title: string;
+  description: string; // This corresponds to fullDescription
+  shortDescription?: string;
+  overview?: string; // Legacy prop, can be ignored or merged
+  images?: string[]; // Legacy simple array
+  media?: MediaItem[]; // New rich media array
+  tags: string[];
+  features?: string[];
+  techStack?: TechStackGroup[];
+  architecture?: string;
+  github?: string;
+  link?: string;
+}
+
+const { id, title, description, shortDescription, overview, images, media, tags, features = [], techStack = [], architecture, github, link } = Astro.props;
+
+// Normalize media: use 'media' if available, otherwise convert 'images' to media format
+const displayMedia = media || (images || []).map(img => ({ type: 'image', url: img, caption: '' }));
+
+// Normalize description: use 'description' as full text
+const fullDescription = description || overview || "";
+const headerDescription = shortDescription || ""; 
+
+---
+
+<dialog id={id} class="group fixed inset-0 z-[70] w-full h-full max-h-screen bg-transparent p-0 m-0 backdrop:bg-black/80 backdrop:backdrop-blur-sm open:animate-in open:fade-in open:zoom-in-95 closed:animate-out closed:fade-out closed:zoom-out-95">
+  <div class="w-full h-full flex items-center justify-center p-4 sm:p-6" onclick="event.target === this && this.closest('dialog').close()">
+    <!-- Modal Container -->
+    <div class="w-full max-w-4xl max-h-[85vh] overflow-hidden rounded-2xl bg-[#0A0A0A] border border-white/10 shadow-2xl shadow-blue-500/10 flex flex-col relative">
+      
+      {/* Header */}
+      <div class="relative p-6 sm:p-8 border-b border-white/10 bg-gradient-to-r from-blue-900/10 to-purple-900/10 shrink-0">
+        <button class="absolute right-6 top-6 p-2 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors close-btn" aria-label="Close modal">
+          <X size={20} />
+        </button>
+
+        <div class="pr-12">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium mb-4">
+            <span>Featured Project</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-2">
+            {title}
+          </h2>
+          {headerDescription && <p class="text-gray-400 text-lg">{headerDescription}</p>}
+        </div>
+      </div>
+
+      {/* Scrollable Content */}
+      <div class="overflow-y-auto p-6 sm:p-8 custom-scrollbar">
+        
+        {/* Media Gallery */}
+        {displayMedia.length > 0 && (
+            <div class="mb-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {displayMedia.map((item, index) => (
+                <div class="relative aspect-video rounded-xl overflow-hidden group bg-white/5 border border-white/10">
+                <img 
+                    src={item.url} 
+                    alt={item.caption || `Project Image ${index + 1}`} 
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                    loading="lazy"
+                />
+                {item.caption && (
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                    <p class="text-sm font-medium text-white">{item.caption}</p>
+                    </div>
+                )}
+                </div>
+            ))}
+            </div>
+        )}
+
+        {/* Full Description */}
+        <div class="mb-10">
+            <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <Layers size={18} className="text-blue-400" />
+            Overview
+            </h3>
+            <p class="text-gray-300 leading-relaxed whitespace-pre-line">
+            {fullDescription}
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+            {/* Key Features */}
+            {features.length > 0 && (
+                <div>
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <CheckCircle2 size={18} className="text-green-400" />
+                    Key Features
+                </h3>
+                <ul class="space-y-3">
+                    {features.map((feature) => (
+                    <li class="flex items-start gap-3 text-gray-300">
+                        <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-green-500/50 shrink-0" />
+                        <span class="text-sm leading-relaxed">{feature}</span>
+                    </li>
+                    ))}
+                </ul>
+                </div>
+            )}
+
+            {/* Tech Stack */}
+            {techStack.length > 0 && (
+                <div>
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <Cpu size={18} className="text-purple-400" />
+                    Tech Stack
+                </h3>
+                <div class="space-y-4">
+                    {techStack.map((group) => (
+                    <div>
+                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">{group.category}</p>
+                        <div class="flex flex-wrap gap-2">
+                        {group.skills.map((skill) => (
+                            <span class="px-2.5 py-1 text-xs rounded-md bg-white/5 border border-white/10 text-gray-300">
+                            {skill}
+                            </span>
+                        ))}
+                        </div>
+                    </div>
+                    ))}
+                </div>
+                </div>
+            )}
+        </div>
+
+        {/* Architecture */}
+        {architecture && (
+            <div class="p-6 rounded-xl bg-white/[0.02] border border-white/5 mb-8">
+            <h3 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                <Server size={18} className="text-orange-400" />
+                System Architecture
+            </h3>
+            <p class="text-gray-300 text-sm leading-relaxed">
+                {architecture}
+            </p>
+            </div>
+        )}
+
+      </div>
+
+      {/* Footer Actions */}
+      {(github && github !== '#') || (link && link !== '#') ? (
+        <div class="p-6 border-t border-white/10 bg-black/20 flex justify-end gap-3 shrink-0 rounded-b-2xl">
+           {github && github !== '#' && (
+            <a href={github} target="_blank" class="px-6 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors flex items-center gap-2">
+                <Github size={16} />
+                <span>View Source</span>
+            </a>
+           )}
+           {link && link !== '#' && (
+            <a href={link} target="_blank" class="px-6 py-2.5 rounded-full bg-white/10 border border-white/10 text-white font-semibold text-sm hover:bg-white/20 transition-colors">
+                <span>Visit Project</span>
+            </a>
+           )}
+        </div>
+      ) : null}
+      
+    </div>
+  </div>
+</dialog>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    // Check for modal-trigger params or setup listeners
+    const dialogs = document.querySelectorAll('dialog');
+    dialogs.forEach(dialog => {
+        const closeBtns = dialog.querySelectorAll('.close-btn');
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', () => dialog.close());
+        });
+        
+        // Click outside to close is handled inline onclick of content wrapper wrapper
+    });
+  });
+</script>

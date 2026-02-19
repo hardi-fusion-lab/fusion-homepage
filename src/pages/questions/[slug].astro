@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import QuestionLayout from '@/layouts/QuestionLayout.astro';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const questions = await getCollection('questions');
+  return questions.map(question => ({
+    params: { slug: question.slug },
+    props: { question },
+  }));
+}
+
+const { question } = Astro.props;
+const { Content } = await question.render();
+---
+
+<QuestionLayout question={question}>
+  <Content />
+</QuestionLayout>

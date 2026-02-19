@@ -1,0 +1,50 @@
+---
+import '@/styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { 
+  title = 'Hardi Fusion Lab',
+  description = 'Full-stack development studio specializing in high-performance web applications.'
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  
+  <script is:inline>
+    (function() {
+      // Force default dark mode if no preference stored
+      const stored = localStorage.getItem('theme');
+      if (stored === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+        if (!stored) localStorage.setItem('theme', 'dark');
+      }
+    })();
+  </script>
+  
+  <ClientRouter />
+</head>
+<body class="font-sans antialiased bg-black text-white selection:bg-blue-500/30 selection:text-white">
+  <slot />
+</body>
+</html>

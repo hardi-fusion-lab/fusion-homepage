@@ -1,0 +1,134 @@
+---
+title: "Explain the Virtual DOM and Reconciliation algorithm"
+category: "architecture"
+subCategory: "Core Concepts"
+difficulty: "Medium"
+tags: ["react", "core-concepts"]
+---
+
+## What is the Virtual DOM?
+
+The Virtual DOM (VDOM) is a lightweight JavaScript representation of the actual DOM. It's a programming concept where an ideal, or "virtual", representation of a UI is kept in memory and synced with the "real" DOM.
+
+### Why Virtual DOM?
+
+Direct DOM manipulation is slow because:
+- DOM operations trigger reflow and repaint
+- Batch updates are difficult to manage
+- Performance bottlenecks in complex UIs
+
+```jsx
+// Virtual DOM representation
+const vdom = {
+  type: 'div',
+  props: {
+    className: 'container',
+    children: [
+      { type: 'h1', props: { children: 'Hello' } },
+      { type: 'p', props: { children: 'World' } }
+    ]
+  }
+};
+```
+
+---
+
+## The Reconciliation Algorithm
+
+Reconciliation is the process React uses to diff one tree with another to determine which parts need to be changed.
+
+### Key Principles
+
+1. **Different Component Types** → Tear down old tree, build new one
+2. **Same Component Type** → Update props, keep instance
+3. **Keys** → Identify which items have changed, added, or removed
+
+### Diffing Algorithm
+
+```jsx
+// Without keys - inefficient
+<ul>
+  <li>First</li>
+  <li>Second</li>
+</ul>
+
+// React will mutate every child
+
+// With keys - efficient
+<ul>
+  <li key="1">First</li>
+  <li key="2">Second</li>
+</ul>
+
+// React knows which specific elements changed
+```
+
+---
+
+## Fiber Architecture
+
+React 16 introduced Fiber, a complete rewrite of the reconciliation algorithm.
+
+### What Fiber Enables
+
+- **Incremental Rendering:** Split work into chunks
+- **Pause, Abort, Reuse:** Work can be paused and resumed
+- **Priority:** Assign priority to different types of updates
+- **Concurrency:** Prepare multiple versions of the UI
+
+```javascript
+// Simplified Fiber node structure
+const fiber = {
+  type: 'div',
+  key: null,
+  props: { className: 'container' },
+  
+  // Relationships
+  parent: parentFiber,
+  child: firstChildFiber,
+  sibling: nextSiblingFiber,
+  
+  // State
+  alternate: previousFiber,
+  effectTag: 'UPDATE',
+  
+  // Work tracking
+  expirationTime: timestamp
+};
+```
+
+### Reconciliation Steps
+
+1. **Render Phase** (can be interrupted)
+   - Build work-in-progress tree
+   - Calculate diffs
+   - Mark effects
+
+2. **Commit Phase** (synchronous)
+   - Apply DOM changes
+   - Run lifecycle methods
+   - Update refs
+
+---
+
+## Performance Optimization
+
+Understanding reconciliation helps optimize React apps:
+
+```jsx
+// ❌ Bad: Creates new object every render
+<Component style={{ color: 'red' }} />
+
+// ✅ Good: Stable reference
+const style = { color: 'red' };
+<Component style={style} />
+
+// ❌ Bad: Inline function
+<button onClick={() => handleClick(id)}>Click</button>
+
+// ✅ Good: Memoized callback
+const handleClick = useCallback(() => {
+  doSomething(id);
+}, [id]);
+<button onClick={handleClick}>Click</button>
+```

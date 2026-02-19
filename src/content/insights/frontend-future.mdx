@@ -1,0 +1,31 @@
+---
+title: "The Future of Frontend Architecture"
+summary: "Exploring the shift from client-side SPAs to heavy server-side rendering and island architectures."
+date: "2024-03-20"
+tags: ["Architecture", "Frontend", "Performance"]
+author: "Hardi Hsu"
+category: "Engineering"
+image: "https://placehold.co/1200x600/1e293b/60a5fa?text=Frontend+Architecture"
+---
+
+# The Future of Frontend Architecture
+
+As we move into 2024, the pendulum of frontend architecture is swinging back towards the server. Tools like Astro, Qwik, and React Server Components are redefining how we ship code to the browser.
+
+## The Problem with SPAs
+
+Single Page Applications (SPAs) solved many user experience problems but introduced significant performance overhead. Sending megabytes of JavaScript to hydrate a simple blog post is no longer acceptable.
+
+## The Rise of Islands
+
+Astro popularized the "Island Architecture" pattern, where static HTML is the default, and interactive components are isolated "islands" of hydration. This approach dramatically reduces the Time to Interactive (TTI) and improves Core Web Vitals.
+
+## Server Components
+
+React Server Components (RSC) take this a step further by allowing components to run exclusively on the server, never sending their code to the client. This allows for direct database access and reduced bundle sizes.
+
+> "The best code is the code you don't send to the client."
+
+## Conclusion
+
+The future is hybrid. A mix of static generation, server-side rendering, and granular client-side hydration offers the best of both worlds.

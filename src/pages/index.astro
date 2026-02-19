@@ -1,0 +1,197 @@
+---
+import StudioLayout from '@/layouts/StudioLayout.astro';
+import { getCollection } from 'astro:content';
+import type { InsightData } from '@/types';
+
+// Components
+import Navigation from '@/components/fusion-astro/Navigation.astro';
+import HeroSection from '@/components/fusion-astro/HeroSection.astro';
+import AboutSection from '@/components/fusion-astro/AboutSection.astro';
+import InsightsSection from '@/components/fusion-astro/InsightsSection.astro';
+import Footer from '@/components/fusion-astro/Footer.astro';
+import SkillBadge from '@/components/fusion-astro/SkillBadge.astro';
+import ProjectCard from '@/components/fusion-astro/ProjectCard.astro';
+import ProjectModal from '@/components/fusion-astro/ProjectModal.astro';
+import { Code2, Terminal, Cloud } from 'lucide-react';
+
+// 1. Fetch Insights Collection
+const allInsights = await getCollection('insights');
+
+// 2. Transform to InsightData format
+const sortedInsights = allInsights.sort((a, b) => {
+    return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf(); 
+}).slice(0, 3); // Top 3
+
+const insights = sortedInsights.map(post => ({
+    id: post.slug,
+    title: post.data.title,
+    summary: post.data.summary,
+    date: new Date(post.data.date).getFullYear().toString(),
+    readTime: '5 min', // can estimate reading time if needed
+    category: post.data.category,
+    image: post.data.image || '',
+    author: { name: post.data.author, avatar: '', role: '' },
+    claps: 0,
+    tags: post.data.tags,
+    content: '' 
+}));
+
+// Skills Data
+const skills = {
+    frontend: ["React", "Next.js", "TypeScript", "Tailwind", "Framer Motion", "Astro"],
+    backend: ["NestJS", "Node.js", "Python", "PostgreSQL", "Redis", "Prisma"],
+    cloud: ["AWS", "Cloudflare", "Docker", "CI/CD", "System Design"]
+};
+
+// Projects Data
+const projects = [
+    {
+        id: "project-futures",
+        title: "Futures Trading Simulation Platform",
+        description: "A comprehensive futures trading simulation environment built to mimic real-world exchange behavior. It provides a risk-free environment for traders to test strategies, featuring real-time market data, sub-millisecond order matching, and strict risk management controls.\n\nThe platform combines a C-Client for trader interaction, an Admin Dashboard for system management, and a robust backend engine handling market data ingestion and trade execution.",
+        shortDescription: "A high-performance, real-time futures trading simulator designed for professional trader training.",
+        tags: ["React", "NestJS", "WebSocket", "PostgreSQL", "High Performance"],
+        media: [
+             { type: 'image', url: '/kline-chart.png', caption: 'Real-time K-Line Charting with TradingView' },
+             { type: 'image', url: '/futures-platform-dashboard.png', caption: 'Positions & Orders Management' }
+        ],
+        features: [
+            "Real-time K-Line charting with TradingView Lightweight Charts integration.",
+            "Tick-to-Bar data aggregation engine for historical data analysis.",
+            "Sub-millisecond order matching simulation engine.",
+            "Real-time P&L calculation and comprehensive position management.",
+            "Admin Dashboard for instrument management, user controls, and fee templates.",
+            "CTP Gateway integration for live market data ingestion from futures exchanges.",
+            "Strict risk management implementation including margin calculation and liquidation logic."
+        ],
+        techStack: [
+             { category: "Frontend", skills: ["React", "TypeScript", "Tailwind CSS", "Zustand", "TradingView Lib"] },
+             { category: "Backend", skills: ["NestJS", "Node.js", "Python (CTP Gateway)", "Redis Pub/Sub", "Socket.io", "RxJS"] },
+             { category: "Data & Infra", skills: ["PostgreSQL", "Redis", "Docker", "TimescaleDB"] }
+        ],
+        architecture: "Microservices-inspired modular architecture. Market Data Gateway streams ticks via Redis Pub/Sub to the Matching Engine and Data Service. The Frontend connects via WebSocket for real-time updates of Order Book, Quotes, and Account State. The entire system is type-safe end-to-end using shared TypeScript DTOs.",
+        github: "#", 
+        featured: true,
+        modal: true
+    },
+    {
+        id: "project-algo",
+        title: "Quantitative Order Execution System",
+        description: "Algorithmic trading execution engine capable of handling complex order strategies. (Currently in development)",
+        tags: ["Python", "Rust", "AWS", "Low Latency"],
+        featured: false
+    },
+    {
+        id: "project-portfolio",
+        title: "Hardi Fusion Lab Portfolio",
+        description: "The platform you are currently viewing. Built with Astro, React, and Tailwind CSS for maximum performance.",
+        tags: ["Astro", "React", "Tailwind"],
+        featured: false
+    }
+];
+
+---
+
+<StudioLayout title="Hardi Fusion Lab | Full Stack & Quant" description="Premium full-stack development studio specializing in high-performance web applications and quantitative systems.">
+    <div class="bg-black min-h-screen text-white selection:bg-blue-500/30">
+        <Navigation />
+        
+        <main>
+            <HeroSection />
+            <AboutSection />
+
+            {/* Skills Section */}
+            <section id="skills" class="py-20 px-6 border-t border-white/5 bg-white/[0.02]">
+                <div class="max-w-7xl mx-auto">
+                    <div class="mb-12">
+                        <h2 class="text-3xl font-bold mb-4">Technical Expertise</h2>
+                        <p class="text-gray-400">Comprehensive full-stack capabilities from silicon to screen.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {/* Frontend */}
+                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500/30 transition-colors duration-300">
+                            <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center mb-6 text-blue-400">
+                                <Code2 size={24} />
+                            </div>
+                            <h3 class="text-xl font-bold mb-4">Frontend Engineering</h3>
+                            <div class="flex flex-wrap gap-2">
+                                {skills.frontend.map(skill => <SkillBadge name={skill} />)}
+                            </div>
+                        </div>
+
+                        {/* Backend */}
+                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-colors duration-300">
+                            <div class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center mb-6 text-purple-400">
+                                <Terminal size={24} />
+                            </div>
+                            <h3 class="text-xl font-bold mb-4">Backend & Data</h3>
+                            <div class="flex flex-wrap gap-2">
+                                {skills.backend.map(skill => <SkillBadge name={skill} />)}
+                            </div>
+                        </div>
+
+                        {/* Cloud */}
+                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-green-500/30 transition-colors duration-300">
+                            <div class="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center mb-6 text-green-400">
+                                <Cloud size={24} />
+                            </div>
+                            <h3 class="text-xl font-bold mb-4">Cloud & Architecture</h3>
+                            <div class="flex flex-wrap gap-2">
+                                {skills.cloud.map(skill => <SkillBadge name={skill} />)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Projects Section */}
+            <section id="projects" class="py-20 px-6">
+                <div class="max-w-7xl mx-auto">
+                    <div class="flex items-end justify-between mb-12">
+                        <div>
+                            <h2 class="text-3xl font-bold mb-4">Featured Projects</h2>
+                            <p class="text-gray-400">Real-world applications driving business value.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {projects.map(project => (
+                            <ProjectCard
+                                title={project.title}
+                                description={project.shortDescription || project.description}
+                                tags={project.tags}
+                                featured={project.featured}
+                                github={project.github}
+                                link={project.link}
+                                modalId={project.modal ? project.id : undefined}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <InsightsSection insights={insights} />
+        </main>
+        
+        {/* Project Modals */}
+        {projects.map(project => (
+            project.modal && (
+                <ProjectModal 
+                    id={project.id}
+                    title={project.title}
+                    description={project.description}
+                    shortDescription={project.shortDescription}
+                    media={project.media}
+                    tags={project.tags}
+                    features={project.features}
+                    techStack={project.techStack}
+                    architecture={project.architecture}
+                    github={project.github}
+                />
+            )
+        ))}
+
+        <Footer />
+    </div>
+</StudioLayout>
