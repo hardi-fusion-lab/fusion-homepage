@@ -1,0 +1,77 @@
+---
+title: "从崩溃中复活：Snapshot + Log 的内存状态恢复架构"
+summary: "深度解析交易引擎如何利用“快照+日志重放”机制，在保障微秒级性能的同时，实现金融级数据高可靠性。"
+date: "Feb 20, 2026"
+tags: ["Persistence", "Event Sourcing", "Database", "High Availability"]
+category: "Backend"
+image: "https://placehold.co/1200x600/0f172a/38bdf8?text=Recovery+Architecture"
+author: "Hardi Hsu"
+---
+
+在构建像撮合引擎这样的**有状态服务（Stateful Service）**时，开发者面临一个悖论：为了快，所有数据必须放在内存里；为了安全，数据必须落在磁盘上。如果程序在交易中途崩溃，如何确保内存中那几万个账户的资金和仓位能一分不差地找回来？
+
+答案就是：**Snapshot（快照）+ Log（指令日志/事件流）**。
+
+### 1. 核心概念：什么是 Log 和 Snapshot？
+
+我们可以把交易引擎想象成一个正在下棋的残局：
+- **Log (日志/事件流)**: 相当于**“棋谱”**。记录了从第一步到最后一步的所有落子顺序（例如：10:01 下单买入，10:02 撤单，10:03 撮合成交）。
+- **Snapshot (快照)**: 相当于**“棋盘照片”**。在某一时刻（例如 10:00），直接给棋盘拍一张照片，记录所有棋子的当前位置。
+
+### 2. 实战分析：如何协同工作？
+
+在撮合引擎中，这两个组件分布在 `snapshot_manager.py` 和 `snapshot_repo.py` 中。
+
+#### 产生过程：
+1.  **Event Stream (Log)**: 每当引擎处理一个指令（如 `order.accepted`），就会产生一个带全局序列号（`seq`）的 **EngineEvent** 并存入数据库（或持久化消息队列）。这是持续发生的。
+2.  **Snapshot Trigger**: 引擎不会每秒拍快照。`SnapshotManager.maybe_snapshot` 会检查：
+    - 是否处理了超过 10,000 条指令？
+    - 距离上次快照是否超过了 5 分钟？
+    - 如果满足条件，执行 `_dump_state()` 将当前内存中所有的 `accounts` (资金)、`positions` (仓位)、`orders` (挂单) 打包成一个大的 JSON/Binary 块，存入数据库的 `EngineSnapshot` 表。
+
+#### 恢复过程（Recovery）：
+当引擎崩溃重启时，它通过以下三步“复活”：
+1.  **加载快照**: 调用 `get_latest_snapshot` 拿到最近一次的照片。假设这张照片拍在第 **5000** 条指令处。
+2.  **定位日志**: 调用 `get_events_after(session_id, seq=5000)`。去数据库里把第 **5001 条到最新一条**的所有 EngineEvent 全部取出来。
+3.  **重放计算 (Replay)**: 引擎遍历这些 Event，调用 `_apply_event`。
+    - **不需要网络 IO**: 重放时，引擎只是在纯算内存数值。
+    - **逻辑复现**: 比如读到 `order.filled` 事件，就调用内存逻辑给对应的账户加钱、减仓。
+
+```python
+# snapshot_manager.py 中的恢复逻辑简化
+def restore(self):
+    # 1. 拿最后的快照
+    snapshot = repo.get_latest_snapshot() 
+    self._load_state(snapshot.payload) # 恢复到 snapshot 那个时刻的状态
+    
+    # 2. 拿快照之后的补丁（Log）
+    events = repo.get_events_after(snapshot.seq)
+    
+    # 3. 快速重跑这些补丁
+    for event in events:
+        self._apply_event(event.type, event.payload)
+```
+
+### 3. 技术细节：怎么确保恢复过程不出错？
+
+#### A. 确定性 (Determinism)
+这是最关键的一点。引擎的计算逻辑必须是“确定性的”。即：**相同的初始状态 + 相同的输入序列 = 相同的结束状态。** 在恢复期间，引擎必须禁用掉所有具有随机性的逻辑（如当前系统时间戳、随机数等），一切以 Log 中记录的 `ts` (事件时间) 为准。
+
+#### B. 序列号 (Sequence Number)
+Log 和 Snapshot 都带有严格递增的 `seq`。这就像书的页码。如果 Snapshot 的页码是 100，而 Log 从 102 开始，系统就会立刻报错，提示“数据空洞”，防止账目对不齐。
+
+#### C. 幂等性 (Idempotency)
+如果恢复中途又崩了怎么办？通过 `idempotency_map`，引擎可以记录哪些流水已经处理过，确保同一笔成交不会被重复加钱。
+
+### 4. 架构纵向总结：全栈开发者的视角
+
+| 维度 | 传统 Web (CRUD) | **高性能交易引擎 (Memory-First)** |
+| :--- | :--- | :--- |
+| **真相来源** | 数据库 (PostgreSQL/MySQL) | **指令日志流 (Log/Events)** |
+| **内存的作用** | 仅仅是缓存 (Cache) | **唯一的计算与实时状态中心** |
+| **持久化目的** | 存储结果 | **为了在重启时重建内存状态** |
+| **性能瓶颈** | 数据库 I/O 锁 | **CPU 计算速度与内存带宽** |
+
+### 5. 总结
+
+Snapshot + Log 架构本质上是用**“重放指令”**的时间换取了**“实时落库”**的空间。它让撮合引擎可以像跑车一样在内存里高速狂飙，而不用担心爆胎（关机），因为我们手里有一张精准的地图（Snapshot）和一份详尽的行车记录仪（Log），随时可以 100% 还原事故现场并继续前进。

@@ -1,0 +1,177 @@
+---
+title: "弱网与网络切换下的丝滑重连设计"
+category: "http"
+subCategory: "Network Optimization"
+tags: ["http", "performance", "mobile"]
+order: 20
+---
+
+在移动端（如下楼梯、进电梯、切换 Wi-Fi/4G）或弱网环境下，保持应用的“无感”重连是提升用户体验的关键。这不仅仅是一个简单的 `setInterval` 轮询，而是一个涉及检测、排队、补偿和 UI 协同的状态机设计。
+
+---
+
+### 1. 核心挑战
+*   **网络切换 (Network Handover)**：IP 地址变更导致长连接（WebSocket/gRPC）失效。
+*   **请求堆积**：重连期间产生的业务请求如果全部丢弃，会导致用户操作无响应。
+*   **雪崩效应**：大量客户端同时重连，瞬间压垮服务端。
+
+### 2. 代码设计思路方案 (Axios 拦截器实现)
+
+我们可以设计一个 **Retry Manager**，核心逻辑包括：**请求拦截队列**、**指数避退 (Exponential Backoff)** 和 **并发锁**。
+
+```typescript
+import axios from 'axios';
+
+// 1. 状态管理
+let isRefreshing = false;
+let requestsQueue: Array<(token?: string) => void> = [];
+
+const apiClient = axios.create({
+  baseURL: 'https://api.example.com',
+  timeout: 5000,
+});
+
+// 2. 响应拦截器：处理“失效”或“断网”
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const { config, response } = error;
+    
+    // 如果是网络断开或特定 401/503 错误
+    if (!response || response.status === 503 || error.code === 'ECONNABORTED') {
+      
+      // 如果已经在重连中，将后续请求放入队列
+      if (isRefreshing) {
+        return new Promise((resolve) => {
+          requestsQueue.push(() => resolve(apiClient(config)));
+        });
+      }
+
+      isRefreshing = true;
+      
+      try {
+        // 执行重连逻辑（如心跳检测、令牌刷新、甚至等待网络恢复事件）
+        await performReconnection();
+        
+        // 重连成功，执行队列中的请求
+        isRefreshing = false;
+        const result = apiClient(config);
+        requestsQueue.forEach((callback) => callback());
+        requestsQueue = [];
+        return result;
+      } catch (reconnectError) {
+        isRefreshing = false;
+        requestsQueue = [];
+        return Promise.reject(reconnectError);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+// 3. 带避退算法的重连逻辑
+async function performReconnection(retries = 3, backoff = 1000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      // 检查网络连通性
+      if (navigator.onLine) {
+        // 模拟一个 Ping 或鉴权请求
+        await axios.get('/ping'); 
+        return;
+      }
+    } catch (e) {
+      // 指数加权避退，防止重试过快导致服务端压力过大
+      await new Promise(r => setTimeout(r, backoff * Math.pow(2, i)));
+    }
+  }
+  throw new Error('Reconnection failed');
+}
+```
+
+### 3. WebSocket 实时连接的“断线重连”设计
+
+WebSocket 是长连接，其核心在于 **“状态同步”**。由于断开期间由于服务端可能产生了多条消息，重连后需要补发或重新同步。
+
+```typescript
+class ReliableWebSocket {
+  private ws: WebSocket | null = null;
+  private url: string;
+  private retryCount = 0;
+  private maxRetry = 10;
+  private messageQueue: string[] = []; // 离线消息缓冲队列
+
+  constructor(url: string) {
+    this.url = url;
+    this.connect();
+  }
+
+  private connect() {
+    this.ws = new WebSocket(this.url);
+
+    this.ws.onopen = () => {
+      console.log("Connected");
+      this.retryCount = 0;
+      this.flushQueue(); // 连上后立即发送积压消息
+    };
+
+    this.ws.onclose = () => {
+      this.reconnect();
+    };
+
+    this.ws.onerror = () => {
+      this.ws?.close();
+    };
+
+    this.ws.onmessage = (event) => {
+      // 业务处理逻辑
+    };
+  }
+
+  private reconnect() {
+    if (this.retryCount >= this.maxRetry) return;
+
+    // 指数避退：1s, 2s, 4s, 8s...
+    const delay = Math.pow(2, this.retryCount) * 1000;
+    this.retryCount++;
+
+    setTimeout(() => {
+      console.log(`Reconnecting attempt ${this.retryCount}...`);
+      this.connect();
+    }, delay);
+  }
+
+  public send(data: any) {
+    const message = JSON.stringify(data);
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(message);
+    } else {
+      // 如果此时断网，先存入队列
+      this.messageQueue.push(message);
+    }
+  }
+
+  private flushQueue() {
+    while (this.messageQueue.length > 0 && this.ws?.readyState === WebSocket.OPEN) {
+      const msg = this.messageQueue.shift();
+      if (msg) this.ws.send(msg);
+    }
+  }
+}
+```
+
+### 4. “丝滑”重连的 5 个进阶细节
+
+1.  **监听原生 API**：
+    *   使用 `window.addEventListener('online', ...)` 结合 `navigator.connection` (Network Information API) 实时感知网络切换。
+2.  **消息序列号 (Sequence ID)**：
+    *   WS 重连后，客户端应发送最后接收到的 `msg_id`。服务端根据 ID 补发断开期间的消息（类似于 TCP 的 ACK 机制）。
+3.  **乐观更新 (Optimistic UI)**：
+    *   对于非敏感操作（如点赞、本地缓存写入），先更新 UI 并将请求放入离线队列（IndexedDB/LocalStorage），待网络恢复后自动同步。
+4.  **幂等性保障**：
+    *   重连请求必须带上唯一的 `Request-ID`。防止重连瞬间成功但响应未收到导致重复操作（如下单业务）。
+5.  **长连接的心跳缩减**：
+    *   在弱网环境下，适当加快心跳包频率以更快地发现链路中断；在网络恢复瞬间，立即触发“快速重试”而非等待下个心跳周期。
+
+### 5. 总结
+“丝滑”重连的核心在于 **“阻断与缓冲”**：在底层连通性恢复前，上层业务侧应处于暂停排队状态而非直接报错，并配合指数避退、消息补发机制和原生网络状态监听，确保在环境恢复的第一时间完成状态恢复与数据同步。

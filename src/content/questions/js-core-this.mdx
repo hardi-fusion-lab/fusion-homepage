@@ -1,0 +1,75 @@
+---
+title: "JavaScript 中 this 的指代与运行机制"
+category: "javascript"
+subCategory: "Language Core"
+tags: ["javascript", "context", "this"]
+order: 5
+---
+
+### 核心定义：this 到底指代什么？
+
+在 JavaScript 中，`this` 的指代**不是在编写时决定的，而是在函数被执行的那一瞬间决定的**。它代表了函数执行时的**上下文（Context）**。
+
+传统的理解“`this` 指代调用函数的对象”在简单场景下是正确的，但在面对高阶函数（如防抖、节流）、异步回调或箭头函数时，这种理解就显得不足了。
+
+---
+
+### 高阶函数中的 “三步接力”
+
+以 `debounce`（防抖）函数为例，我们可以追踪 `this` 是如何像接力棒一样传递的：
+
+#### 第一步：接收者 —— 返回的包装函数
+```javascript
+return function(...args) { // <--- 这里的 this 是什么？
+  // ...
+}
+```
+当你调用包装后的函数（如 `log()`）时，这个匿名函数被执行。它的运行环境决定了此时的 `this`。如果是全局调用，`this` 是 `window`（严格模式下为 `undefined`）；如果是作为对象方法调用，`this` 就是那个对象。
+
+#### 第二步：传递者 —— 箭头函数
+```javascript
+timer = setTimeout(() => { // <--- 箭头函数没有自己的 this！
+  // ...
+}, delay);
+```
+在 `setTimeout` 内部，我们使用了箭头函数。**箭头函数没有自己的 `this`**，它会捕获外层作用域（即包装函数）的 `this`。
+> **注意**：如果这里用普通函数 `function() { ... }`，`this` 会指向 `window`，导致上下文丢失。
+
+#### 第三步：终点 —— 原函数被强行绑定
+```javascript
+fn.apply(this, args); // <--- 把第一步拿到的 this，原封不动地交给原函数
+```
+`apply` 的作用是强制指定 `fn` 执行时的身份。我们将第一步捕获到的、本该属于原函数的 `this` 重新“塞”给它，确保逻辑执行正确。
+
+---
+
+### 不同场景下的 this 表现
+
+1. **全局裸调用**：
+   ```javascript
+   const log = debounce(() => console.log(this), 1000);
+   log(); // this 指向 Window (非严格模式)
+   ```
+2. **作为对象方法**：
+   ```javascript
+   const user = {
+     name: 'Hardi',
+     speak: debounce(function() { console.log(this.name); }, 1000)
+   };
+   user.speak(); // 1s 后打印 "Hardi" (this 指向 user)
+   ```
+3. **DOM 事件监听**：
+   ```javascript
+   btn.addEventListener('click', debounce(function() {
+     console.log(this.id); // this 指向触发事件的 DOM 元素
+   }, 1000));
+   ```
+
+---
+
+### 面试深度回答：词法作用域 vs 执行上下文
+
+- **词法作用域（Lexical Scope）**：由函数定义的位置决定。箭头函数的 `this` 就是基于词法作用域的，它继承自定义时所在的环境。
+- **执行上下文（Execution Context）**：由函数如何被调用决定。普通函数的 `this` 属于执行上下文的一部分，是动态绑定的。
+
+**总结**：在复杂的代码结构中，`this` 扮演着**占位符和搬运工**的角色。通过 `apply/call/bind` 和箭头函数的特性，我们能保证函数在被延迟执行或平移执行后，依然能准确访问到它本该拥有的上下文环境。

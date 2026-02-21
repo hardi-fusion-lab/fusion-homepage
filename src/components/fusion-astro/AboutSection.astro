@@ -1,62 +1,54 @@
 ---
 ---
-<section class="py-20 px-6 bg-white/[0.02] border-t border-white/5">
+<section class="py-32 px-6 relative overflow-hidden border-t border-white/5">
+    <!-- Subtle Background Detail -->
+    <div class="absolute inset-0 -z-10 opacity-20">
+        <div class="absolute inset-0 bg-grid-mesh [mask-image:linear-gradient(to_bottom,transparent,black,transparent)]"></div>
+    </div>
+
     <div class="max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <div 
-                class="opacity-0 translate-x-[-20px] transition-all duration-700 ease-out" 
-                data-animate-in="show"
+                class="opacity-0 translate-y-10 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]" 
+                data-animate-in
             >
-                <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    From Interface to Infrastructure.
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] mb-6">
+                    Philosophy
+                </div>
+                
+                <h2 class="text-fluid-h2 font-black mb-8 leading-none">
+                    Architecting the <br />
+                    <span class="text-white/40">Whole.</span>
                 </h2>
-                <div class="space-y-6 text-gray-300 leading-relaxed">
+                
+                <div class="space-y-6 text-gray-400 text-lg leading-relaxed max-w-xl">
                     <p>
-                        With years of experience as a Frontend Engineer, I often felt restricted by the boundaries of my role and the friction in backend integration. I sought a project where I could architect the entire stack to satisfy my curiosity for complete engineering structures. An invitation to develop a trading platform for a futures company became my catalyst—giving me the perfect stage to build a high-performance system from the ground up.
+                        Born from a dissatisfaction with fragmented engineering, I've spent nearly a decade bridging the gap between high-level aesthetics and low-level logic. 
                     </p>
-                    <p class="font-medium text-white border-l-2 border-blue-500 pl-4">
-                        I believe true engineering freedom comes from understanding the full stack. My goal is to bridge the gap between design and logic, creating seamless, high-performance experiences born from a unified vision.
+                    <p class="font-bold text-white border-l-4 border-blue-500 pl-6 py-2 bg-blue-500/5 rounded-r-2xl">
+                        I believe that truly robust systems—from order-matching engines to real-time protocols—require a unified vision that spans the entire stack.
                     </p>
                 </div>
-
-                <!-- CV Module Hidded Temporarily -->
-                <!-- <div class="mt-10">
-                    <a 
-                        href="https://docs.google.com/document/d/1jnD8VthgmQIbBbXIDxERZEuXRBJrPFTE3k4wx1m5KMQ/edit?usp=sharing" 
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="inline-flex items-center px-8 py-3 rounded-full bg-blue-500 hover:bg-blue-600 text-white font-semibold transition-all duration-300 shadow-lg shadow-blue-500/20 group"
-                    >
-                        <span>View My CV</span>
-                        <svg 
-                            class="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform" 
-                            fill="none" 
-                            stroke="currentColor" 
-                            viewBox="0 0 24 24"
-                        >
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </a>
-                </div> -->
             </div>
 
             <div 
-                class="relative opacity-0 scale-90 transition-all duration-700 ease-out delay-200"
-                data-animate-in="show"
+                class="relative opacity-0 translate-y-20 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] delay-300"
+                data-animate-in
             >
-                {/* Image Representation */}
-                <div class="aspect-square rounded-2xl border border-white/10 p-2 relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-blue-500/10 blur-3xl group-hover:bg-blue-500/20 transition-colors duration-500" />
+                <!-- Image Representation with Branded Glow -->
+                <div class="relative aspect-square md:aspect-video lg:aspect-square rounded-[2rem] border border-white/10 p-3 bg-white/5 backdrop-blur-3xl group overflow-hidden">
+                    <div class="absolute inset-0 bg-blue-500/5 blur-3xl group-hover:bg-blue-500/10 transition-colors duration-700"></div>
                     <img
                         src="/about-visual.png"
                         alt="Fusion of Design and Logic"
-                        class="w-full h-full object-cover rounded-xl"
+                        class="w-full h-full object-cover rounded-[1.5rem] grayscale hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100"
                         loading="lazy"
                     />
 
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-8 text-center">
-                        <div class="text-6xl font-bold text-white mb-2 shadow-sm drop-shadow-lg">8+</div>
-                        <div class="text-sm text-gray-300 uppercase tracking-widest font-medium text-shadow">Years of Experience</div>
+                    <!-- Branded Experience Badge -->
+                    <div class="absolute bottom-10 right-10 p-6 rounded-3xl bg-black/60 border border-white/10 backdrop-blur-xl flex flex-col items-center justify-center min-w-[140px] shadow-2xl">
+                        <div class="text-5xl font-black text-white leading-none">8+</div>
+                        <div class="text-[10px] font-black text-blue-400 uppercase tracking-widest mt-2">Years Exp</div>
                     </div>
                 </div>
             </div>

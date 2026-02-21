@@ -1,4 +1,4 @@
-# FE Library - 前端面试题库
+# Fusion Lab - Engineering Atelier
 
 一个基于 **Astro + MDX** 构建的静态前端面试题库，支持 AI 智能解答。
 

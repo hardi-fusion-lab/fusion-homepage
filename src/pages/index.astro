@@ -92,106 +92,158 @@ const projects = [
 
 ---
 
-<StudioLayout title="Hardi Fusion Lab | Full Stack & Quant" description="Premium full-stack development studio specializing in high-performance web applications and quantitative systems.">
-    <div class="bg-black min-h-screen text-white selection:bg-blue-500/30">
-        <Navigation />
-        
-        <main>
-            <HeroSection />
-            <AboutSection />
-
-            {/* Skills Section */}
-            <section id="skills" class="py-20 px-6 border-t border-white/5 bg-white/[0.02]">
-                <div class="max-w-7xl mx-auto">
-                    <div class="mb-12">
-                        <h2 class="text-3xl font-bold mb-4">Technical Expertise</h2>
-                        <p class="text-gray-400">Comprehensive full-stack capabilities from silicon to screen.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {/* Frontend */}
-                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500/30 transition-colors duration-300">
-                            <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center mb-6 text-blue-400">
-                                <Code2 size={24} />
-                            </div>
-                            <h3 class="text-xl font-bold mb-4">Frontend Engineering</h3>
-                            <div class="flex flex-wrap gap-2">
-                                {skills.frontend.map(skill => <SkillBadge name={skill} />)}
-                            </div>
-                        </div>
-
-                        {/* Backend */}
-                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-colors duration-300">
-                            <div class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center mb-6 text-purple-400">
-                                <Terminal size={24} />
-                            </div>
-                            <h3 class="text-xl font-bold mb-4">Backend & Data</h3>
-                            <div class="flex flex-wrap gap-2">
-                                {skills.backend.map(skill => <SkillBadge name={skill} />)}
-                            </div>
-                        </div>
-
-                        {/* Cloud */}
-                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-green-500/30 transition-colors duration-300">
-                            <div class="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center mb-6 text-green-400">
-                                <Cloud size={24} />
-                            </div>
-                            <h3 class="text-xl font-bold mb-4">Cloud & Architecture</h3>
-                            <div class="flex flex-wrap gap-2">
-                                {skills.cloud.map(skill => <SkillBadge name={skill} />)}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Projects Section */}
-            <section id="projects" class="py-20 px-6">
-                <div class="max-w-7xl mx-auto">
-                    <div class="flex items-end justify-between mb-12">
-                        <div>
-                            <h2 class="text-3xl font-bold mb-4">Featured Projects</h2>
-                            <p class="text-gray-400">Real-world applications driving business value.</p>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {projects.map(project => (
-                            <ProjectCard
-                                title={project.title}
-                                description={project.shortDescription || project.description}
-                                tags={project.tags}
-                                featured={project.featured}
-                                github={project.github}
-                                link={project.link}
-                                modalId={project.modal ? project.id : undefined}
-                            />
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            <InsightsSection insights={insights} />
-        </main>
-        
-        {/* Project Modals */}
-        {projects.map(project => (
-            project.modal && (
-                <ProjectModal 
-                    id={project.id}
-                    title={project.title}
-                    description={project.description}
-                    shortDescription={project.shortDescription}
-                    media={project.media}
-                    tags={project.tags}
-                    features={project.features}
-                    techStack={project.techStack}
-                    architecture={project.architecture}
-                    github={project.github}
-                />
-            )
-        ))}
-
-        <Footer />
+<StudioLayout title="Hardi Fusion Lab | Engineering Atelier" description="Engineering high-complexity systems across Quantitative Trading, Real-time Media, and Web3.">
+  <div class="bg-black min-h-screen text-white relative selection:bg-blue-500/30 selection:text-white overflow-x-hidden">
+    <!-- Global Atmosphere -->
+    <div class="fixed inset-0 pointer-events-none -z-10">
+        <div class="absolute inset-0 bg-grid-mesh [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20"></div>
+        <div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-blue-600/5 blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-[20%] right-[10%] w-[600px] h-[600px] bg-purple-600/5 blur-[140px] rounded-full"></div>
     </div>
+
+    <Navigation />
+    
+    <main class="relative z-10 transition-all duration-700">
+      <HeroSection />
+      
+      <AboutSection />
+
+      {/* Skills Section */}
+      <section id="skills" class="py-32 px-6 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto relative z-10">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div class="opacity-0 translate-y-10 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]" data-animate-in>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] mb-6">
+                Expertise
+              </div>
+              <h2 class="text-fluid-h2 font-black mb-8 leading-none">Technical <br /><span class="text-white/40">Capabilities.</span></h2>
+              <p class="text-gray-400 text-lg leading-relaxed mb-12 max-w-xl">
+                Bridging the gap between low-latency performance systems and modern, intuitive user interfaces with a focus on scalability and security.
+              </p>
+              
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                 {/* Simplified Category View */}
+                 <div class="space-y-4">
+                    <h4 class="text-xs font-bold text-white uppercase tracking-widest">Frontend</h4>
+                    <div class="flex flex-wrap gap-2">
+                        {skills.frontend.slice(0, 4).map(skill => <SkillBadge name={skill} />)}
+                    </div>
+                 </div>
+                 <div class="space-y-4">
+                    <h4 class="text-xs font-bold text-white uppercase tracking-widest">Backend</h4>
+                    <div class="flex flex-wrap gap-2">
+                        {skills.backend.slice(0, 4).map(skill => <SkillBadge name={skill} />)}
+                    </div>
+                 </div>
+                 <div class="space-y-4">
+                    <h4 class="text-xs font-bold text-white uppercase tracking-widest">Cloud</h4>
+                    <div class="flex flex-wrap gap-2">
+                        {skills.cloud.slice(0, 4).map(skill => <SkillBadge name={skill} />)}
+                    </div>
+                 </div>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 opacity-0 translate-y-20 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] delay-200" data-animate-in>
+              <div class="space-y-4">
+                <div class="h-32 rounded-3xl bg-blue-500/10 border border-blue-500/20 backdrop-blur-sm p-6 flex flex-col justify-end group hover:bg-blue-500/15 transition-all">
+                    <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">Scale</span>
+                    <span class="text-2xl font-black text-white">Distributed</span>
+                </div>
+                <div class="h-48 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm p-6 flex flex-col justify-end group hover:bg-white/10 transition-all">
+                    <div class="flex items-center gap-1 text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                        Matching
+                    </div>
+                    <span class="text-2xl font-black text-white">&lt;500μs</span>
+                </div>
+              </div>
+              <div class="space-y-4 pt-8">
+                <div class="h-48 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm p-6 flex flex-col justify-end group hover:bg-white/10 transition-all">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Security</span>
+                    <span class="text-2xl font-black text-white">Hardened</span>
+                </div>
+                <div class="h-32 rounded-3xl bg-purple-500/10 border border-purple-500/20 backdrop-blur-sm p-6 flex flex-col justify-end group hover:bg-purple-500/15 transition-all">
+                    <span class="text-[10px] font-bold text-purple-400 uppercase tracking-widest mb-1">Logic</span>
+                    <span class="text-2xl font-black text-white">Advanced</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Projects Section */}
+      <section id="projects" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+          <div class="flex items-end justify-between mb-16 px-2 opacity-0 translate-y-10 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]" data-animate-in>
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] mb-6">
+                Works
+              </div>
+              <h2 class="text-fluid-h2 font-black leading-none">Selected <br /><span class="text-white/40">Projects.</span></h2>
+            </div>
+            <p class="hidden md:block text-gray-500 text-right max-w-[200px] text-sm font-medium italic">
+                A curated selection of high-performance architecture.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {projects.map((project, index) => (
+              <div class="opacity-0 translate-y-10 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]" style={`transition-delay: ${index * 100}ms`} data-animate-in>
+                <ProjectCard
+                  title={project.title}
+                  description={project.shortDescription || project.description}
+                  tags={project.tags}
+                  featured={project.featured}
+                  github={project.github}
+                  link={project.link}
+                  modalId={project.modal ? project.id : undefined}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <InsightsSection insights={insights} />
+    </main>
+
+    <Footer />
+    
+    <script>
+        document.addEventListener('astro:page-load', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.remove('opacity-0', 'translate-y-10', 'translate-y-20');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('[data-animate-in]').forEach((el) => {
+                observer.observe(el);
+            });
+        });
+    </script>
+
+    {/* Project Modals */}
+    {projects.map(project => (
+        project.modal && (
+            <ProjectModal 
+                id={project.id}
+                title={project.title}
+                description={project.description}
+                shortDescription={project.shortDescription}
+                media={project.media}
+                tags={project.tags}
+                features={project.features}
+                techStack={project.techStack}
+                architecture={project.architecture}
+                github={project.github}
+            />
+        )
+    ))}
+  </div>
 </StudioLayout>

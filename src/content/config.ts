@@ -6,6 +6,7 @@ const questionsCollection = defineCollection({
         title: z.string(),
         category: z.enum([
             'react',
+            'javascript',
             'http',
             'security',
             'performance',

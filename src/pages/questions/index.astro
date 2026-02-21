@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Sidebar from '@/components/Sidebar.astro';
 import QuestionList from '@/components/QuestionList.astro';
+import CategoryExplorer from '@/components/fusion-astro/CategoryExplorer.astro';
 
 const allQuestions = await getCollection('questions');
 const sortedQuestions = allQuestions.sort((a, b) => {
@@ -17,14 +18,20 @@ const sortedQuestions = allQuestions.sort((a, b) => {
   <div class="flex h-screen w-full bg-bg-dark overflow-hidden">
     <Sidebar />
     
-    <!-- Question List -->
-    <QuestionList questions={sortedQuestions} />
+    <!-- Question List Placeholder (Stabilizer) -->
+    <section class="hidden md:flex w-[400px] flex-col border-r border-slate-200 dark:border-slate-800 bg-[var(--card-bg)] h-full">
+      <header class="p-4 border-b border-slate-200 dark:border-slate-800">
+        <div class="h-10 w-full bg-slate-100 dark:bg-white/5 rounded-lg animate-pulse-slow"></div>
+      </header>
+      <div class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+        <span class="material-symbols-outlined text-4xl mb-4 text-slate-300 dark:text-slate-700">arrow_back</span>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Select a Category</p>
+      </div>
+    </section>
 
-    <!-- Empty State -->
-    <main class="flex-1 flex flex-col items-center justify-center bg-bg-dark text-slate-500 p-8 text-center">
-      <span class="material-symbols-outlined text-6xl mb-4 opacity-20">article</span>
-      <h2 class="text-xl font-semibold text-slate-300">Select a question to view details</h2>
-      <p class="mt-2 max-w-xs">Explore deep-dive front-end engineering topics from our curated library.</p>
+    <!-- Main Content: Category Explorer Dashboard -->
+    <main class="flex-1 overflow-y-auto custom-scrollbar bg-[var(--bg-primary)]">
+      <CategoryExplorer />
     </main>
   </div>
 </BaseLayout>
