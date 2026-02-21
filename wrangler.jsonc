@@ -1,6 +1,6 @@
 {
   "main": "dist/_worker.js",
-  "name": "fusion-lab",
+  "name": "fusion-homepage",
   "compatibility_date": "2026-02-21",
   "compatibility_flags": [
     "nodejs_compat",
