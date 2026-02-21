@@ -18,7 +18,9 @@ export default defineConfig({
         sitemap(),
     ],
     output: 'server',
-    adapter: cloudflare(),
+    adapter: cloudflare({
+        platform: 'workers'
+    }),
     site: 'https://fe-library.example.com',
     vite: {
         define: {
