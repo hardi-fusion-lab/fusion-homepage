@@ -5,6 +5,8 @@ import mdx from '@astrojs/mdx';
 import node from '@astrojs/node';
 import sitemap from '@astrojs/sitemap';
 
+import cloudflare from '@astrojs/cloudflare';
+
 // https://astro.build/config
 export default defineConfig({
     integrations: [
@@ -16,9 +18,7 @@ export default defineConfig({
         sitemap(),
     ],
     output: 'server',
-    adapter: node({
-        mode: 'standalone',
-    }),
+    adapter: cloudflare(),
     site: 'https://fe-library.example.com',
     vite: {
         define: {
