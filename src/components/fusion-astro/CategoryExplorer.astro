@@ -56,10 +56,11 @@ const categoryCounts = CATEGORIES.reduce((acc, cat) => {
   // Spotlight effect for cards
   const cards = document.querySelectorAll('.glass-card');
   cards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
+    card.addEventListener('mousemove', (e: Event) => {
+      const mouseEvent = e as MouseEvent;
       const rect = (card as HTMLElement).getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const x = mouseEvent.clientX - rect.left;
+      const y = mouseEvent.clientY - rect.top;
       (card as HTMLElement).style.setProperty('--mouse-x', `${x}px`);
       (card as HTMLElement).style.setProperty('--mouse-y', `${y}px`);
     });

@@ -1,7 +1,7 @@
 ---
 import StudioLayout from '@/layouts/StudioLayout.astro';
 import { getCollection } from 'astro:content';
-import type { InsightData } from '@/types';
+import type { InsightData, MediaItem } from '@/types';
 
 // Components
 import Navigation from '@/components/fusion-astro/Navigation.astro';
@@ -52,9 +52,9 @@ const projects = [
         shortDescription: "A high-performance, real-time futures trading simulator designed for professional trader training.",
         tags: ["React", "NestJS", "WebSocket", "PostgreSQL", "High Performance"],
         media: [
-             { type: 'image', url: '/kline-chart.png', caption: 'Real-time K-Line Charting with TradingView' },
-             { type: 'image', url: '/futures-platform-dashboard.png', caption: 'Positions & Orders Management' }
-        ],
+             { type: 'image' as const, url: '/kline-chart.png', caption: 'Real-time K-Line Charting with TradingView' },
+             { type: 'image' as const, url: '/futures-platform-dashboard.png', caption: 'Positions & Orders Management' }
+        ] as MediaItem[],
         features: [
             "Real-time K-Line charting with TradingView Lightweight Charts integration.",
             "Tick-to-Bar data aggregation engine for historical data analysis.",
@@ -71,6 +71,7 @@ const projects = [
         ],
         architecture: "Microservices-inspired modular architecture. Market Data Gateway streams ticks via Redis Pub/Sub to the Matching Engine and Data Service. The Frontend connects via WebSocket for real-time updates of Order Book, Quotes, and Account State. The entire system is type-safe end-to-end using shared TypeScript DTOs.",
         github: "#", 
+        link: "#",
         featured: true,
         modal: true
     },
@@ -79,14 +80,26 @@ const projects = [
         title: "Quantitative Order Execution System",
         description: "Algorithmic trading execution engine capable of handling complex order strategies. (Currently in development)",
         tags: ["Python", "Rust", "AWS", "Low Latency"],
-        featured: false
+        link: "#",
+        featured: false,
+        modal: false,
+        media: [] as MediaItem[],
+        features: [],
+        techStack: [],
+        architecture: ""
     },
     {
         id: "project-portfolio",
         title: "Hardi Fusion Lab Portfolio",
         description: "The platform you are currently viewing. Built with Astro, React, and Tailwind CSS for maximum performance.",
         tags: ["Astro", "React", "Tailwind"],
-        featured: false
+        link: "#",
+        featured: false,
+        modal: false,
+        media: [] as MediaItem[],
+        features: [],
+        techStack: [],
+        architecture: ""
     }
 ];
 

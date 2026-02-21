@@ -1,16 +1,6 @@
 ---
 import { X, CheckCircle2, Server, Cpu, Layers, Github } from 'lucide-react';
-
-interface TechStackGroup {
-  category: string;
-  skills: string[];
-}
-
-interface MediaItem {
-  type: 'image' | 'video';
-  url: string;
-  caption: string;
-}
+import type { MediaItem, TechStackGroup } from '@/types';
 
 interface Props {
   id: string;
