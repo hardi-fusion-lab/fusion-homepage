@@ -8,7 +8,7 @@
   ],
   "pages_build_output_dir": "dist",
   "assets": {
-    "binding": "ASSETS",
+    "binding": "CF_ASSETS",
     "directory": "./dist"
   },
   "observability": {
