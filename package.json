@@ -18,15 +18,11 @@
     "@astrojs/sitemap": "^3.7.0",
     "@astrojs/tailwind": "^6.0.0",
     "@google/genai": "^1.40.0",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
     "astro": "^5.0.5",
     "clsx": "^2.1.1",
-    "framer-motion": "^12.34.2",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.575.0",
     "react": "^18.3.1",
-    "react-code-blocks": "^0.1.6",
     "react-dom": "^18.3.1",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^3.4.17"
@@ -34,6 +30,8 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^22.14.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "typescript": "^5.8.2"
   }
 }
