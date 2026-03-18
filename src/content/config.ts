@@ -18,6 +18,7 @@ const questionsCollection = defineCollection({
             'web3',
             'graphics',
             'algorithms',
+            'ai',
         ]),
         subCategory: z.string(),
 

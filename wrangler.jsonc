@@ -1,5 +1,4 @@
 {
-  "main": "dist/_worker.js",
   "name": "fusion-homepage",
   "compatibility_date": "2026-02-21",
   "compatibility_flags": [
@@ -7,10 +6,6 @@
     "global_fetch_strictly_public"
   ],
   "pages_build_output_dir": "dist",
-  "assets": {
-    "binding": "CF_ASSETS",
-    "directory": "./dist"
-  },
   "observability": {
     "enabled": true
   }

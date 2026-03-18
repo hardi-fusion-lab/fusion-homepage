@@ -19,7 +19,7 @@ export default defineConfig({
     ],
     output: 'server',
     adapter: cloudflare({
-        platform: 'workers'
+        platform: 'pages'
     }),
     site: 'https://fe-library.example.com',
     vite: {

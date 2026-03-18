@@ -20,4 +20,5 @@ export const CATEGORIES: Category[] = [
     { id: 'web3', name: 'Web3 探索', icon: 'currency_bitcoin', color: 'text-yellow-500', description: '区块链协议、智能合约以及去中心化应用逻辑。' },
     { id: 'graphics', name: '图形学', icon: 'palette', color: 'text-purple-400', description: 'WebGL、Canvas API 以及高性能交互式图形。' },
     { id: 'algorithms', name: '数据结构与算法', icon: 'function', color: 'text-emerald-400', description: '基础数据结构与高效的算法问题解决方案。' },
+    { id: 'ai', name: 'AI 智能体与大模型', icon: 'smart_toy', color: 'text-indigo-400', description: '探索前端在 AI 时代的应用，包括智能体、工作流编排等。' },
 ];
