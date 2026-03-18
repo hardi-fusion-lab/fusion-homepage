@@ -114,9 +114,6 @@ src/
 
 支持部署到：
 
-- **Vercel**: `vercel deploy`
-- **Netlify**: `netlify deploy`
-- **GitHub Pages**: 配置 GitHub Actions
 - **Cloudflare Pages**: 连接 Git 仓库
 
 ## 📄 License
